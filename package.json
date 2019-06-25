@@ -1,0 +1,22 @@
+{
+  "name": "d3-sandbox",
+  "version": "0.1.0",
+  "description": "Play with D3.js",
+  "main": "index.js",
+  "repository": "https://github.com/revonia/d3-sandbox.git",
+  "author": "revonia <revonia64@gmail.com>",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "dev": "vuepress dev .",
+    "build": "vuepress build ."
+  },
+  "dependencies": {
+    "d3": "^5.9.2",
+    "lodash": "^4.17.11",
+    "monaco-editor": "^0.17.0"
+  },
+  "devDependencies": {
+    "vuepress": "1.0.1"
+  }
+}
