@@ -3,4 +3,11 @@
 
 Test
 
-<ScriptEditor></ScriptEditor>
+<ScriptEditor>
+<<< @/src/simple-bar-chart/bar-chart.js
+<<< @/src/simple-bar-chart/index.html
+<<< @/src/simple-bar-chart/style.css
+</ScriptEditor>
+
+<<< @/src/import.txt
+

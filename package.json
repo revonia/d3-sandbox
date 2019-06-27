@@ -9,7 +9,9 @@
   "private": false,
   "scripts": {
     "dev": "vuepress dev .",
-    "build": "vuepress build ."
+    "build": "vuepress build .",
+    "lint": "eslint .vuepress/components/* src",
+    "lint:fix": "eslint .vuepress/components/* src --fix"
   },
   "dependencies": {
     "d3": "^5.9.2",
@@ -17,6 +19,14 @@
     "monaco-editor": "^0.17.0"
   },
   "devDependencies": {
+    "error": "^7.0.2",
+    "eslint": "^6.0.1",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.18.0",
+    "eslint-plugin-node": "^9.1.0",
+    "eslint-plugin-standard": "^4.0.0",
+    "eslint-plugin-vue": "^5.2.3",
+    "standard": "^12.0.1",
     "vuepress": "1.0.1"
   }
 }
