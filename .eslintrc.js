@@ -16,7 +16,9 @@ module.exports = {
     "_": "readonly"
   },
   "parserOptions": {
-    "ecmaVersion": 2018
+    "ecmaVersion": 2019,
+    "parser": "babel-eslint",
+    "allowImportExportEverywhere": true
   },
   "plugins": [
     "vue"

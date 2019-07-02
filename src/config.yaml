@@ -1,0 +1,6 @@
+js:
+  - https://unpkg.com/d3@latest/dist/d3.min.js
+  - https://unpkg.com/lodash@latest/lodash.min.js
+
+css:
+  - https://unpkg.com/normalize.css@latest/normalize.css

@@ -1,44 +1,58 @@
 <template>
   <div class="script-editor">
     <div
-      v-show="previewLoaded"
-      ref="previewBox"
-      class="preview-box"
-    />
-    <div class="editor-box">
-      <div class="editor-toolbar">
-        <ul class="editor-actions">
-          <li
-            v-for="tab in tabs"
-            :key="tab.name"
-          >
-            <button
-              type="button"
-              class="editor-tab editor-btn"
-              :class="{active: currentTab === tab.name}"
-              @click="changeTab(tab)"
-            >
-              {{ tab.name }}
-            </button>
-          </li>
-        </ul>
-        <ul class="editor-actions">
-          <li>
-            <button
-              class="editor-btn primary"
-              type="button"
-              @click="preview"
-            >
-              RUN
-            </button>
-          </li>
-        </ul>
-      </div>
+      v-show="sourcesLoaded"
+      class="main-container"
+    >
       <div
-        ref="editor"
-        class="editor"
+        v-show="previewLoaded"
+        ref="previewBox"
+        class="preview-box"
       />
+      <div class="editor-box">
+        <div class="editor-toolbar">
+          <ul class="editor-actions">
+            <li
+              v-for="tab in tabs"
+              :key="tab.name"
+            >
+              <button
+                type="button"
+                class="editor-tab editor-btn"
+                :class="{active: currentTab === tab.name}"
+                @click="changeTab(tab)"
+              >
+                {{ tab.name }}
+              </button>
+            </li>
+          </ul>
+          <ul class="editor-actions">
+            <li>
+              <button
+                class="editor-btn primary"
+                type="button"
+                @click="preview"
+              >
+                RUN &gt;
+              </button>
+            </li>
+          </ul>
+        </div>
+        <div class="editor-container">
+          <div
+            v-show="!editorLoaded"
+            class="editor-loading"
+          >
+            Loading editor...
+          </div>
+          <div
+            ref="editor"
+            class="editor"
+          />
+        </div>
+      </div>
     </div>
+
     <div
       v-show="!sourcesLoaded"
       ref="sourceContainer"
@@ -50,11 +64,7 @@
 </template>
 
 <script>
-import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js'
-import 'monaco-editor/esm/vs/basic-languages/javascript/javascript.contribution'
-import 'monaco-editor/esm/vs/basic-languages/css/css.contribution'
-import 'monaco-editor/esm/vs/basic-languages/html/html.contribution'
-import 'monaco-editor/esm/vs/editor/contrib/find/findController.js'
+import * as yaml from 'js-yaml'
 
 export default {
   name: 'ScriptEditor',
@@ -66,7 +76,8 @@ export default {
         { name: 'javascript', selector: '@pre.language-js > code', language: 'javascript' },
         { name: 'css', selector: '@pre.language-css > code', language: 'css' },
         { name: 'html', selector: '@pre.language-html > code', language: 'html' },
-        { name: 'resource', selector: '@pre.language-text > code', language: 'text', type: 'resource' }
+        { name: 'json', selector: '@pre.language-json > code', language: 'json' },
+        { name: 'config.yaml', selector: '@pre.language-yaml > code', language: 'yaml', type: 'config' }
       ]
     }
   },
@@ -75,23 +86,20 @@ export default {
       tabData: new Map(),
       editor: null,
       frameSrc: '',
-      beforeDestroyCallback: [],
       previewLoaded: false,
       currentTab: '',
-      sourcesLoaded: false
+      sourcesLoaded: false,
+      editorLoaded: false
     }
   },
-  computed: {
-    tabMap () {
-      return this.tabs.reduce((map, tab) => map.set(tab.name, { ...tab }), new Map())
+  created () {
+    if (!this.$options.beforeDestroy) {
+      this.$options.beforeDestroy = []
     }
   },
   mounted () {
     this.loadSources()
-    this.renderEditor()
-  },
-  beforeDestroy () {
-    this.beforeDestroyCallback.forEach(callback => callback())
+    import('./editor').then(monaco => this.renderEditor(monaco))
   },
   methods: {
     getTabData (name) {
@@ -123,7 +131,7 @@ export default {
 
       this.sourcesLoaded = true
     },
-    renderEditor () {
+    renderEditor ({ monaco }) {
       if (!this.editor) {
         const el = this.$refs['editor']
 
@@ -138,15 +146,20 @@ export default {
           const name = tab.name
           const data = this.getTabData(name)
           data.model = monaco.editor.createModel(data.source, tab.language, name)
+          data.model.onDidChangeContent(() => {
+            data.source = data.model.getValue()
+          })
         })
 
         this.$nextTick(() => {
           this.editor.setModel(this.getTabData(this.currentTab).model)
         })
 
-        this.beforeDestroyCallback.push(() => {
+        this.$options.beforeDestroy.push(() => {
           this.editor.dispose()
         })
+
+        this.editorLoaded = true
       }
     },
     changeTab (tab) {
@@ -172,11 +185,25 @@ export default {
       const frame = document.createElement('iframe')
 
       let sources = this.tabs.map(tab => {
-        return {
+        const item = {
           source: this.getTabData(tab.name).source,
-          type: tab.type || tab.language
+          type: tab.type || tab.language,
+          resolved: null
         }
+        switch (tab.language) {
+          case 'yaml':
+            item.resolved = yaml.safeLoad(item.source)
+            break
+          case 'json':
+            item.resolved = JSON.parse(item.source)
+            break
+        }
+
+        return item
       })
+
+      sources.$$scriptEditorResource = true
+
       frame.onload = function () {
         frame.contentWindow.postMessage(sources, '/')
       }
@@ -190,12 +217,26 @@ export default {
 </script>
 
 <style>
-
-  .script-editor {
+  .main-container {
     border-radius: 6px;
     overflow: hidden;
     border: 1px solid #424242;
   }
+
+  .editor-loading {
+    padding: 10px;
+    text-align: center;
+    vertical-align: center;
+    color: #d4d4d4;
+    position: absolute;
+    width: 100%;
+  }
+
+  .editor-container {
+    background-color: #1e1e1e;
+    position: relative;
+  }
+
   .editor {
     min-height: 300px;
   }
@@ -214,6 +255,7 @@ export default {
     margin: 0;
     display: inline-block;
   }
+
   .editor-actions > li {
     list-style-type: none;
     display: inline-block;
@@ -244,7 +286,7 @@ export default {
   }
 
   .editor-btn.primary:hover {
-    background-color: #38bbee;
+    background-color: #007acc;
     color: white;
   }
 
