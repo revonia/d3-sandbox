@@ -6,36 +6,41 @@
       class="preview-box"
     />
     <div class="editor-box">
-      <ul class="editor-tabs">
-        <li
-          v-for="tab in tabs"
-          :key="tab.name"
-        >
-          <button
-            type="button"
-            class="editor-tab"
-            :class="{active: currentTab === tab.name}"
-            @click="changeTab(tab)"
+      <div class="editor-toolbar">
+        <ul class="editor-actions">
+          <li
+            v-for="tab in tabs"
+            :key="tab.name"
           >
-            {{ tab.name }}
-          </button>
-        </li>
-        <li>
-          <button
-            type="button"
-            @click="preview"
-          >
-            RUN
-          </button>
-        </li>
-      </ul>
+            <button
+              type="button"
+              class="editor-tab editor-btn"
+              :class="{active: currentTab === tab.name}"
+              @click="changeTab(tab)"
+            >
+              {{ tab.name }}
+            </button>
+          </li>
+        </ul>
+        <ul class="editor-actions">
+          <li>
+            <button
+              class="editor-btn primary"
+              type="button"
+              @click="preview"
+            >
+              RUN
+            </button>
+          </li>
+        </ul>
+      </div>
       <div
         ref="editor"
         class="editor"
       />
     </div>
     <div
-      v-show="!sourcesRead"
+      v-show="!sourcesLoaded"
       ref="sourceContainer"
       class="source-container"
     >
@@ -55,78 +60,68 @@ export default {
   name: 'ScriptEditor',
   components: {},
   props: {
-    readonly: {
-      type: Boolean,
-      default: false
-    },
-    languageMap: {
-      type: Object,
-      default () {
-        return {
-          'js': 'javascript',
-          'css': 'css',
-          'html': 'html',
-          'json': 'javascript'
-        }
-      }
+    tabs: {
+      type: Array,
+      default: () => [
+        { name: 'javascript', selector: '@pre.language-js > code', language: 'javascript' },
+        { name: 'css', selector: '@pre.language-css > code', language: 'css' },
+        { name: 'html', selector: '@pre.language-html > code', language: 'html' },
+        { name: 'resource', selector: '@pre.language-text > code', language: 'text', type: 'resource' }
+      ]
     }
   },
   data () {
     return {
+      tabData: new Map(),
       editor: null,
-      source: '',
       frameSrc: '',
       beforeDestroyCallback: [],
       previewLoaded: false,
-      sources: {},
       currentTab: '',
-      sourcesRead: false,
-      enabledTabs: ['js', 'json', 'html', 'css'],
-      tabs: [],
-      tabsIndex: {}
+      sourcesLoaded: false
+    }
+  },
+  computed: {
+    tabMap () {
+      return this.tabs.reduce((map, tab) => map.set(tab.name, { ...tab }), new Map())
     }
   },
   mounted () {
-    this.readSources()
-    this.buildTabs()
+    this.loadSources()
     this.renderEditor()
   },
   beforeDestroy () {
     this.beforeDestroyCallback.forEach(callback => callback())
   },
   methods: {
-    buildTabs () {
-      let index = {}
+    getTabData (name) {
+      if (!this.tabData.has(name)) {
+        this.tabData.set(name, {
+          source: null,
+          state: null,
+          model: null
+        })
+      }
+      return this.tabData.get(name)
+    },
+    loadSources () {
+      const slot = this.$refs['sourceContainer']
 
-      this.enabledTabs.forEach(name => {
-        if (typeof this.sources[name] !== 'undefined') {
-          const tab = { name, state: null, model: null }
-          this.tabs.push(tab)
-          index[name] = tab
+      this.tabs.forEach(tab => {
+        const el = (tab.selector && tab.selector[0] === '@') // // start with @ means query in slot
+          ? slot.querySelector(tab.selector.substr(1))
+          : document.querySelector(tab.selector)
+
+        if (el) {
+          const data = this.getTabData(tab.name)
+          data.source = el.textContent
+          if (this.currentTab === '') {
+            this.currentTab = tab.name
+          }
         }
       })
 
-      this.tabsIndex = index
-    },
-    readSources () {
-      const sources = this.enabledTabs.reduce((sources, lang) => {
-        const codeEl = this.$refs['sourceContainer'].querySelector(`pre.language-${lang} > code`)
-        if (codeEl) {
-          sources[lang] = codeEl.textContent
-        }
-        return sources
-      }, {})
-
-      for (let i = 0; i < this.enabledTabs.length; i++) {
-        let name = this.enabledTabs[i]
-        if (typeof sources[name] !== 'undefined') {
-          this.currentTab = name
-          break
-        }
-      }
-
-      this.sources = sources
-      this.sourcesRead = true
+      this.sourcesLoaded = true
     },
     renderEditor () {
       if (!this.editor) {
@@ -141,10 +136,13 @@ export default {
 
         this.tabs.forEach(tab => {
           const name = tab.name
-          tab.model = monaco.editor.createModel(this.sources[name], this.languageMap[name], name)
+          const data = this.getTabData(name)
+          data.model = monaco.editor.createModel(data.source, tab.language, name)
         })
 
-        this.editor.setModel(this.tabsIndex[this.currentTab].model)
+        this.$nextTick(() => {
+          this.editor.setModel(this.getTabData(this.currentTab).model)
+        })
 
         this.beforeDestroyCallback.push(() => {
           this.editor.dispose()
@@ -152,14 +150,15 @@ export default {
       }
     },
     changeTab (tab) {
-      const currentTab = this.tabsIndex[this.currentTab]
+      const current = this.getTabData(this.currentTab)
+      const data = this.getTabData(tab.name)
 
-      currentTab.state = this.editor.saveViewState()
+      current.state = this.editor.saveViewState()
       this.currentTab = tab.name
 
-      this.editor.setModel(tab.model)
-      if (tab.state !== null) {
-        this.editor.restoreViewState(tab.state)
+      this.editor.setModel(data.model)
+      if (data.state !== null) {
+        this.editor.restoreViewState(data.state)
       }
       this.editor.focus()
     },
@@ -171,7 +170,13 @@ export default {
       }
 
       const frame = document.createElement('iframe')
-      let sources = Object.assign({}, this.sources)
+
+      let sources = this.tabs.map(tab => {
+        return {
+          source: this.getTabData(tab.name).source,
+          type: tab.type || tab.language
+        }
+      })
       frame.onload = function () {
         frame.contentWindow.postMessage(sources, '/')
       }
@@ -195,29 +200,30 @@ export default {
     min-height: 300px;
   }
 
-  .editor-tabs {
-    padding: 0;
-    margin: 0;
+  .editor-toolbar {
+    height: 40px;
     background-color: #1e1e1e;
     border-bottom: 2px solid #424242;
+    display: flex;
+    justify-content: space-between;
   }
 
-  .editor-tabs > li {
+  .editor-actions {
+    height: 40px;
+    padding: 0;
+    margin: 0;
+    display: inline-block;
+  }
+  .editor-actions > li {
     list-style-type: none;
     display: inline-block;
+    height: 100%;
   }
 
   .editor-tab {
-    background-color: #1e1e1e;
-    padding: 0;
-    border: none;
-    color: #d4d4d4;
-    height: 3em;
-    cursor: pointer;
-    min-width: 4em;
     font-family: Consolas, "Courier New", monospace;
-    outline: none;
   }
+
   .editor-tab:hover {
     color: white;
   }
@@ -226,10 +232,27 @@ export default {
     background-color: #424242;
   }
 
+  .editor-btn {
+    background-color: transparent;
+    padding: 0 1em;
+    border: none;
+    color: #d4d4d4;
+    height: 100%;
+    min-width: 4em;
+    outline: none;
+    cursor: pointer;
+  }
+
+  .editor-btn.primary:hover {
+    background-color: #38bbee;
+    color: white;
+  }
+
   .preview-box {
     box-sizing: border-box;
     height: 300px;
   }
+
   .preview-box > iframe {
     width: 100%;
     border: none;

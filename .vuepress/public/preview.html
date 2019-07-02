@@ -6,19 +6,19 @@
   <script type="application/javascript">
 
     window.addEventListener("message", function (event) {
-      const data = event.data;
-      ['json', 'css', 'html', 'js'].forEach(type => {
-        if (typeof data[type] !== 'undefined') {
-          $$loadResource(type, data[type])
-        }
+      const order = ['css', 'html', 'resource', 'json', 'javascript']
+      let data = [...event.data]
+      data.sort((a, b) => {
+        return order.indexOf(a.type) - order.indexOf(b.type)
       })
+      data.forEach(item => $$loadResource(item.type, item.source))
     }, false);
 
     var jsonResource = {}
 
     function $$loadResource (type, content) {
       switch (type) {
-        case 'js':
+        case 'javascript':
           try {
             eval(content)
           } catch (e) {
@@ -30,13 +30,29 @@
         case 'css':
           const tag = document.createElement("style");
           tag.innerHTML = content;
-          document.body.appendChild(tag);
+          document.head.appendChild(tag);
           break;
         case 'html':
           document.body.innerHTML += content
           break;
         case 'json':
           jsonResource = JSON.parse(content)
+          break;
+        case 'resource':
+          content.split('\n').forEach((src) => {
+            let tag
+            if (src.endsWith('.js')) {
+              tag = document.createElement('script')
+              tag.src = src
+              tag.type = 'application/javascript'
+              document.head.append(tag)
+            } else if (src.endsWith('.css')) {
+              tag = document.createElement('link')
+              tag.type = 'stylesheet'
+              tag.href = src
+              document.head.append(tag)
+            }
+          })
           break;
       }
     }
