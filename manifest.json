@@ -1,9 +1,10 @@
 {
   "name": "D3 Sandbox",
   "short_name": "D3 Sandbox",
-  "start_url": ".",
+  "start_url": "index.html",
   "display": "standalone",
   "background_color": "#fff",
+  "theme_color": "#000",
   "description": "Play with D3.js.",
   "icons": [{
     "src": "images/icon/d3-sandbox48.png",
@@ -31,6 +32,7 @@
     "type": "image/png"
   }],
   "related_applications": [{
-    "platform": "web"
+    "platform": "web",
+    "url": "https://revonia.github.io/d3-sandbox/"
   }]
 }
