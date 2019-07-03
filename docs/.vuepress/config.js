@@ -29,5 +29,10 @@ module.exports = {
     '@vuepress/register-components': {
       componentsDir: 'src/base/global-components'
     }
-  }
+  },
+  head: [
+    ['link', { rel: 'shortcut icon', href: 'favicon.ico', type: 'image/x-icon',  }],
+    ['link', { rel: 'icon', href: 'images/icon/d3-sandbox192.png',  }],
+    ['link', { rel: 'manifest', href: 'manifest.json', type: 'application/manifest+json' }],
+  ]
 }
