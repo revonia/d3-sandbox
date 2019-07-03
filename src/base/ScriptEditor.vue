@@ -4,51 +4,61 @@
       v-show="sourcesLoaded"
       class="main-container"
     >
-      <div
-        v-show="previewLoaded"
-        ref="previewBox"
-        class="preview-box"
-      />
-      <div class="editor-box">
-        <div class="editor-toolbar">
-          <ul class="editor-actions">
-            <li
-              v-for="tab in tabs"
-              :key="tab.name"
+      <div class="toolbar">
+        <ul class="actions">
+          <li>
+            <button
+              class="btn tab-btn"
+              type="button"
+              :class="{active: showPreview}"
+              @click="preview"
             >
-              <button
-                type="button"
-                class="editor-tab editor-btn"
-                :class="{active: currentTab === tab.name}"
-                @click="changeTab(tab)"
-              >
-                {{ tab.name }}
-              </button>
-            </li>
-          </ul>
-          <ul class="editor-actions">
-            <li>
-              <button
-                class="editor-btn primary"
-                type="button"
-                @click="preview"
-              >
-                RUN &gt;
-              </button>
-            </li>
-          </ul>
-        </div>
-        <div class="editor-container">
-          <div
-            v-show="!editorLoaded"
-            class="editor-loading"
+              Run &amp; Preview
+            </button>
+          </li><li
+            v-for="tab in tabs"
+            :key="tab.name"
           >
-            Loading editor...
-          </div>
+            <button
+              type="button"
+              class="tab-btn btn"
+              :class="{active: currentTab === tab.name}"
+              @click="changeTab(tab.name)"
+            >
+              {{ tab.name }}
+            </button>
+          </li>
+        </ul>
+      </div>
+      <div
+        class="box"
+        :style="{height}"
+      >
+        <div
+          v-show="showEditor"
+          class="editor-container"
+        >
           <div
             ref="editor"
             class="editor"
           />
+        </div>
+        <div
+          v-show="showPreview"
+          class="preview-container"
+        >
+          <div
+            ref="previewBox"
+            class="preview-box"
+          />
+        </div>
+        <div
+          v-show="loading"
+          class="loading"
+        >
+          <div class="loading-text">
+            Loading...
+          </div>
         </div>
       </div>
     </div>
@@ -65,6 +75,7 @@
 
 <script>
 import * as yaml from 'js-yaml'
+import { load, iframeSrc } from './preview-loader'
 
 export default {
   name: 'ScriptEditor',
@@ -76,20 +87,36 @@ export default {
         { name: 'javascript', selector: '@pre.language-js > code', language: 'javascript' },
         { name: 'css', selector: '@pre.language-css > code', language: 'css' },
         { name: 'html', selector: '@pre.language-html > code', language: 'html' },
-        { name: 'json', selector: '@pre.language-json > code', language: 'json' },
+        { name: 'dataset.json', selector: '@pre.language-json > code', language: 'javascript', type: 'dataset' },
         { name: 'config.yaml', selector: '@pre.language-yaml > code', language: 'yaml', type: 'config' }
       ]
+    },
+    previewFirst: {
+      type: Boolean,
+      default: true
+    },
+    initialHeight: {
+      type: String,
+      default: '300px'
     }
   },
   data () {
     return {
       tabData: new Map(),
       editor: null,
-      frameSrc: '',
-      previewLoaded: false,
       currentTab: '',
       sourcesLoaded: false,
-      editorLoaded: false
+      showPreview: false,
+      showEditor: false,
+      loading: false,
+      innerHeight: null
+    }
+  },
+  computed: {
+    height () {
+      return this.innerHeight === null
+        ? this.initialHeight
+        : this.innerHeight
     }
   },
   created () {
@@ -97,9 +124,17 @@ export default {
       this.$options.beforeDestroy = []
     }
   },
-  mounted () {
+  async mounted () {
     this.loadSources()
-    import('./editor').then(monaco => this.renderEditor(monaco))
+
+    this.loading = true
+    const monaco = await import('./editor')
+    this.renderEditor(monaco)
+    if (this.previewFirst) {
+      this.preview()
+    } else {
+      this.changeTab(this.tabs[0].name)
+    }
   },
   methods: {
     getTabData (name) {
@@ -123,9 +158,6 @@ export default {
         if (el) {
           const data = this.getTabData(tab.name)
           data.source = el.textContent
-          if (this.currentTab === '') {
-            this.currentTab = tab.name
-          }
         }
       })
 
@@ -133,6 +165,7 @@ export default {
     },
     renderEditor ({ monaco }) {
       if (!this.editor) {
+        this.loading = true
         const el = this.$refs['editor']
 
         this.editor = monaco.editor.create(el, {
@@ -145,37 +178,47 @@ export default {
         this.tabs.forEach(tab => {
           const name = tab.name
           const data = this.getTabData(name)
-          data.model = monaco.editor.createModel(data.source, tab.language, name)
-          data.model.onDidChangeContent(() => {
-            data.source = data.model.getValue()
-          })
+          data.model = monaco.editor.createModel(data.source, tab.language)
         })
 
-        this.$nextTick(() => {
-          this.editor.setModel(this.getTabData(this.currentTab).model)
-        })
+        this.editor.setModel(this.getTabData(this.currentTab).model)
 
         this.$options.beforeDestroy.push(() => {
           this.editor.dispose()
         })
-
-        this.editorLoaded = true
+        this.loading = false
       }
     },
-    changeTab (tab) {
-      const current = this.getTabData(this.currentTab)
-      const data = this.getTabData(tab.name)
+    async changeTab (name) {
+      if (name === '') {
+        this.showEditor = false
+        this.currentTab = ''
+        return
+      }
 
-      current.state = this.editor.saveViewState()
-      this.currentTab = tab.name
+      if (this.currentTab) {
+        const current = this.getTabData(this.currentTab)
+        current.state = this.editor.saveViewState()
+      }
 
+      this.currentTab = name
+
+      const data = this.getTabData(name)
       this.editor.setModel(data.model)
       if (data.state !== null) {
         this.editor.restoreViewState(data.state)
       }
+      this.showEditor = true
+      this.showPreview = false
+      await this.$nextTick()
+
       this.editor.focus()
+      this.editor.layout()
+
+      this.loading = false
     },
     preview () {
+      this.loading = true
       const el = this.$refs['previewBox']
       // clean up
       while (el.firstChild) {
@@ -184,97 +227,100 @@ export default {
 
       const frame = document.createElement('iframe')
 
-      let sources = this.tabs.map(tab => {
-        const item = {
-          source: this.getTabData(tab.name).source,
-          type: tab.type || tab.language,
-          resolved: null
-        }
-        switch (tab.language) {
-          case 'yaml':
-            item.resolved = yaml.safeLoad(item.source)
-            break
-          case 'json':
-            item.resolved = JSON.parse(item.source)
-            break
+      let resource = this.tabs.map(tab => {
+        let content = this.getTabData(tab.name).model.getValue()
+
+        if (tab.language === 'yaml') {
+          content = yaml.safeLoad(content)
         }
 
-        return item
+        return {
+          content: content,
+          type: tab.type || tab.language
+        }
       })
 
-      sources.$$scriptEditorResource = true
-
-      frame.onload = function () {
-        frame.contentWindow.postMessage(sources, '/')
+      frame.onload = async () => {
+        await load(frame.contentWindow, resource)
+        this.loading = false
       }
-      frame.src = this.$withBase('/preview.html')
+
+      frame.src = iframeSrc
 
       el.appendChild(frame)
-      this.previewLoaded = true
+      this.showPreview = true
+      this.changeTab('')
     }
   }
 }
 </script>
 
 <style>
+  .box {
+    position: relative;
+  }
+
   .main-container {
     border-radius: 6px;
     overflow: hidden;
     border: 1px solid #424242;
+    position: relative;
   }
 
-  .editor-loading {
-    padding: 10px;
-    text-align: center;
-    vertical-align: center;
-    color: #d4d4d4;
+  .loading {
+    display: flex;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    color: white;
     position: absolute;
-    width: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  .loading > .loading-text {
+    margin: auto;
   }
 
   .editor-container {
     background-color: #1e1e1e;
-    position: relative;
+    height: 100%;
+
   }
 
-  .editor {
-    min-height: 300px;
-  }
-
-  .editor-toolbar {
-    height: 40px;
+  .toolbar {
+    height: 30px;
     background-color: #1e1e1e;
     border-bottom: 2px solid #424242;
-    display: flex;
-    justify-content: space-between;
   }
 
-  .editor-actions {
-    height: 40px;
+  .actions {
+    height: 100%;
     padding: 0;
     margin: 0;
     display: inline-block;
+    white-space: nowrap;
   }
 
-  .editor-actions > li {
+  .actions > li {
     list-style-type: none;
     display: inline-block;
     height: 100%;
   }
 
-  .editor-tab {
+  .tab-btn {
     font-family: Consolas, "Courier New", monospace;
   }
 
-  .editor-tab:hover {
+  .tab-btn:hover {
     color: white;
   }
 
-  .editor-tab.active {
+  .tab-btn.active {
     background-color: #424242;
   }
 
-  .editor-btn {
+  .btn {
     background-color: transparent;
     padding: 0 1em;
     border: none;
@@ -285,20 +331,21 @@ export default {
     cursor: pointer;
   }
 
-  .editor-btn.primary:hover {
-    background-color: #007acc;
-    color: white;
-  }
-
   .preview-box {
     box-sizing: border-box;
-    height: 300px;
   }
 
   .preview-box > iframe {
     width: 100%;
     border: none;
-    height: 100%;
   }
 
+  .preview-container,
+  .preview-box,
+  .preview-box > iframe,
+  .editor-container,
+  .editor
+  {
+    height: 100%;
+  }
 </style>

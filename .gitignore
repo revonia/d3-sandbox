@@ -46,4 +46,4 @@ jspm_packages/
 # jetbrains
 .idea/
 
-doc/.vuepress/dist
+dist/
