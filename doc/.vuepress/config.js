@@ -10,9 +10,9 @@ module.exports = {
     '/': {
       lang: 'zh-CN'
     },
-    '/en/': {
-      lang: 'en-Us'
-    }
+    // '/en/': {
+    //   lang: 'en-Us'
+    // }
   },
   serviceWorker: true
 }
