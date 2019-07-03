@@ -1,7 +1,11 @@
-# D3 Sandbox
 ---
-
-Test
+home: true
+heroImage: images/icon/d3-sandbox192.png
+heroText: D3 Sandbox
+tagline: Play with D3.js
+---
+ 
+### 试试嵌入在页面上的“沙盒”
 
 <ScriptEditor>
 
