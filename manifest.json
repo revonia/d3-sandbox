@@ -1,0 +1,36 @@
+{
+  "name": "D3 Sandbox",
+  "short_name": "D3 Sandbox",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#fff",
+  "description": "Play with D3.js.",
+  "icons": [{
+    "src": "images/icon/d3-sandbox48.png",
+    "sizes": "48x48",
+    "type": "image/png"
+  }, {
+    "src": "images/icon/d3-sandbox72.png",
+    "sizes": "72x72",
+    "type": "image/png"
+  }, {
+    "src": "images/icon/d3-sandbox96.png",
+    "sizes": "96x96",
+    "type": "image/png"
+  }, {
+    "src": "images/icon/d3-sandbox144.png",
+    "sizes": "144x144",
+    "type": "image/png"
+  }, {
+    "src": "images/icon/d3-sandbox168.png",
+    "sizes": "168x168",
+    "type": "image/png"
+  }, {
+    "src": "images/icon/d3-sandbox192.png",
+    "sizes": "192x192",
+    "type": "image/png"
+  }],
+  "related_applications": [{
+    "platform": "web"
+  }]
+}
