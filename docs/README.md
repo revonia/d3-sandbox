@@ -15,7 +15,7 @@ footer: MIT Licensed | Copyright © 2019-present Revonia
  
 ### 现在就来试试沙盒
 
-<ScriptEditor>
+<CodeSandbox>
 
 <<< @/src/share/index.html
 
@@ -27,5 +27,5 @@ footer: MIT Licensed | Copyright © 2019-present Revonia
 
 <<< @/src/config.yaml
 
-</ScriptEditor>
+</CodeSandbox>
 

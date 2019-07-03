@@ -1,5 +1,5 @@
 <template>
-  <div class="script-editor">
+  <div class="code-sandbox">
     <div
       v-show="sourcesLoaded"
       class="main-container"
@@ -78,7 +78,7 @@ import * as yaml from 'js-yaml'
 import { load, iframeSrc } from '../preview-loader'
 
 export default {
-  name: 'ScriptEditor',
+  name: 'CodeSandbox',
   components: {},
   props: {
     tabs: {
@@ -103,7 +103,6 @@ export default {
   data () {
     return {
       tabData: new Map(),
-      editor: null,
       currentTab: '',
       sourcesLoaded: false,
       showPreview: false,
@@ -120,6 +119,7 @@ export default {
     }
   },
   created () {
+    this.editor = null // non-reactive data, it is no need observer
     if (!this.$options.beforeDestroy) {
       this.$options.beforeDestroy = []
     }
