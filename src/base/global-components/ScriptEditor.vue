@@ -75,7 +75,7 @@
 
 <script>
 import * as yaml from 'js-yaml'
-import { load, iframeSrc } from './preview-loader'
+import { load, iframeSrc } from '../preview-loader'
 
 export default {
   name: 'ScriptEditor',
@@ -128,7 +128,7 @@ export default {
     this.loadSources()
 
     this.loading = true
-    const monaco = await import('./editor')
+    const monaco = await import('../editor')
     this.renderEditor(monaco)
     if (this.previewFirst) {
       this.preview()
