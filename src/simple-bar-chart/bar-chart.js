@@ -1,30 +1,35 @@
 const dataset = JSON.parse(document.querySelector('#dataset').innerText)
-const rectHeight = 25 // 每个矩形所占的像素高度(包括空白)
 
-const chart = d3.select('#chart')
+drawBarChart(dataset)
 
-const linear = d3.scaleLinear()
-  .domain([0, d3.max(dataset)])
-  .range([0, 300])
+function drawBarChart (dataset) {
+  const rectHeight = 25 // 每个矩形所占的像素高度(包括空白)
 
-const xAxis = d3.axisBottom(linear)
-  .ticks(10)
+  const chart = d3.select('#chart')
 
-chart.selectAll('rect')
-  .data(dataset)
-  .enter()
-  .append('rect')
-  .attr('x', 20)
-  .attr('y', (d, i) => i * rectHeight)
-  .attr('width', d => linear(d))
-  .attr('height', rectHeight - 2)
-  .attr('fill', 'steelblue')
+  const linear = d3.scaleLinear()
+    .domain([0, d3.max(dataset)])
+    .range([0, 300])
 
-chart.selectAll('text')
-  .data(dataset)
-  .enter()
-  .append('text')
+  const xAxis = d3.axisBottom(linear)
+    .ticks(10)
 
-chart.append('g').call(xAxis)
-  .attr('x', 20)
-  .attr('y', 140)
+  chart.selectAll('rect')
+    .data(dataset)
+    .enter()
+    .append('rect')
+    .attr('x', 20)
+    .attr('y', (d, i) => i * rectHeight)
+    .attr('width', d => linear(d))
+    .attr('height', rectHeight - 2)
+    .attr('fill', 'steelblue')
+
+  chart.selectAll('text')
+    .data(dataset)
+    .enter()
+    .append('text')
+
+  chart.append('g').call(xAxis)
+    .attr('x', 20)
+    .attr('y', 140)
+}

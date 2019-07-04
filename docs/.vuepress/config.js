@@ -20,6 +20,12 @@ module.exports = {
     docsDir: 'docs',
     docsBranch: 'master',
     editLinks: true,
+    sidebar: 'auto',
+    nav: [
+      { text: '主页', link: '/' },
+      { text: 'd3.js 基础', link: '/d3-basic/' },
+      { text: '实例', link: '/examples/' },
+    ]
   },
   plugins: {
     '@vuepress/pwa': {
@@ -31,8 +37,11 @@ module.exports = {
     }
   },
   head: [
-    ['link', { rel: 'shortcut icon', href: 'favicon.ico', type: 'image/x-icon',  }],
-    ['link', { rel: 'icon', href: 'images/icon/d3-sandbox192.png',  }],
-    ['link', { rel: 'manifest', href: 'manifest.json', type: 'application/manifest+json' }],
+    ['link', { rel: 'shortcut icon', href: '/favicon.ico', type: 'image/x-icon',  }],
+    ['link', { rel: 'icon', href: '/images/icon/d3-sandbox192.png',  }],
+    ['link', { rel: 'manifest', href: '/manifest.json', type: 'application/manifest+json' }],
+  ],
+  extraWatchFiles: [
+    'src'
   ]
 }
