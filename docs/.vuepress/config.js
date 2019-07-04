@@ -43,5 +43,9 @@ module.exports = {
   ],
   extraWatchFiles: [
     'src'
-  ]
+  ],
+  algolia: process.env.ALGOLIA_API_KEY ? {
+    apiKey: process.env.ALGOLIA_API_KEY,
+    indexName: 'd3-sandbox'
+  } : {}
 }
