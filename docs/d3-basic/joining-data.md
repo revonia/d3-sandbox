@@ -66,3 +66,5 @@ d3-selection 中， 不再提供 `update()` API，因为写在 `exit()` 之前�
 
 推荐继续阅读 [General Update Pattern](https://bl.ocks.org/mbostock/3808218)
 
+<Vssue :title="$title"/>
+

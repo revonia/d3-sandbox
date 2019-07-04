@@ -34,7 +34,14 @@ module.exports = {
     },
     '@vuepress/register-components': {
       componentsDir: 'src/base/global-components'
-    }
+    },
+    '@vssue/vuepress-plugin-vssue': {
+      platform: 'github',
+      owner: 'revonia',
+      repo: 'd3-sandbox',
+      clientId: process.env.OAUTH_CLIENT_ID || 'id',
+      clientSecret: process.env.OAUTH_CLIENT_SECRET || 'secret',
+    },
   },
   head: [
     ['link', { rel: 'shortcut icon', href: '/favicon.ico', type: 'image/x-icon',  }],
@@ -44,8 +51,8 @@ module.exports = {
   extraWatchFiles: [
     'src'
   ],
-  algolia: process.env.ALGOLIA_API_KEY ? {
-    apiKey: process.env.ALGOLIA_API_KEY,
+  algolia: {
+    apiKey: process.env.ALGOLIA_API_KEY || 'key',
     indexName: 'd3-sandbox'
-  } : {}
+  }
 }
