@@ -40,9 +40,19 @@
 
 </CodeSandBox>
 
+在 `selectAll('tr').data(dataset)` 后，创建了一个具有三个数据的组，意味着每个 `<tr>` 对应一行数据
+之后的 `selectAll('td').data(d => d)` ，创建了三个组，每个组有六个数字，意味着每一个 `<tr>` 中的六个 `<td>` 都对应一个数字
+
 #### 对象数组
 具有标识的数据集也很普遍，例如从关系型数据库中查出的数据集，这时可以提供给 `data()` API 第二个参数：一个返回这条数据的唯一标志的函数，可以使 d3.js 追踪变化
 
+<CodeSandbox>
+
+<<< @/src/config.yaml
+
+<<< @/src/d3-basic/joining-data/example-bind-object-data.js
+
+</CodeSandBox>
 
 ## join, enter, exit
 
@@ -67,4 +77,3 @@ d3-selection 中， 不再提供 `update()` API，因为写在 `exit()` 之前�
 推荐继续阅读 [General Update Pattern](https://bl.ocks.org/mbostock/3808218)
 
 <Vssue :title="$title"/>
-
