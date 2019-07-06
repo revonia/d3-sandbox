@@ -11,7 +11,8 @@
     "dev": "vuepress dev docs",
     "build": "vuepress build docs",
     "lint": "eslint **/*.js **/*.vue",
-    "lint:fix": "eslint **/*.js **/*.vue --fix"
+    "lint:fix": "eslint **/*.js **/*.vue --fix",
+    "serve-local": "node serve-local.js"
   },
   "dependencies": {
     "@vssue/api-github-v3": "^1.0.0",
@@ -30,6 +31,7 @@
     "eslint-plugin-node": "^9.1.0",
     "eslint-plugin-standard": "^4.0.0",
     "eslint-plugin-vue": "^5.2.3",
+    "gray-matter": "^4.0.2",
     "lodash": "^4.17.11",
     "standard": "^12.0.1",
     "vuepress": "1.0.1"

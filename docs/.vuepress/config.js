@@ -1,6 +1,6 @@
-const yaml = require('js-yaml')
-const fs = require('fs')
-const docsConfig = yaml.safeLoad(fs.readFileSync( __dirname + '/../docs-config.yaml'));
+const docsConfig = require('../../src/base/docs-config-resolver')(__dirname + '/../docs-config.yaml')
+
+const d3Script = docsConfig.resourcesMap['d3@5'].replace(/^\/d3-sandbox/, '')
 
 module.exports = {
   title: 'D3 Sandbox',
@@ -24,11 +24,12 @@ module.exports = {
     docsDir: 'docs',
     docsBranch: 'master',
     editLinks: true,
-    sidebar: 'auto',
-    algolia: {
-      apiKey: process.env.ALGOLIA_API_KEY || 'key',
-      indexName: 'd3-sandbox'
-    },
+    algolia: process.env.ALGOLIA_API_KEY == null
+      ? {}
+      :{
+        apiKey: process.env.ALGOLIA_API_KEY,
+        indexName: 'd3-sandbox'
+      },
     ...docsConfig
   },
   plugins: {
@@ -48,11 +49,20 @@ module.exports = {
     },
   },
   head: [
-    ['link', { rel: 'shortcut icon', href: '/favicon.ico', type: 'image/x-icon',  }],
-    ['link', { rel: 'icon', href: '/images/icon/d3-sandbox192.png',  }],
+    ['link', { rel: 'shortcut icon', href: '/favicon.ico', type: 'image/x-icon', }],
+    ['link', { rel: 'icon', href: '/images/icon/d3-sandbox192.png', }],
     ['link', { rel: 'manifest', href: '/manifest.json', type: 'application/manifest+json' }],
+    ['script', { type: 'application/javascript', src: d3Script }],
   ],
   extraWatchFiles: [
     'src'
-  ]
+  ],
+  configureWebpack: (config, isServer) => {
+    if (!Array.isArray(config.plugins)) {
+      config.plugins = []
+    }
+
+    if (!isServer) {
+    }
+  }
 }

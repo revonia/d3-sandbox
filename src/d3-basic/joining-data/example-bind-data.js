@@ -4,6 +4,7 @@ function drawOn (id) {
     .selectAll('span')
     .data(dataset)
     .style('font-size', d => d + 'px')
+    .classed('selected', true)
     .text(d => d)
 }
 

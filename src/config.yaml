@@ -1,5 +1,5 @@
 js:
-  - https://cdnjs.cloudflare.com/ajax/libs/d3/5.9.7/d3.min.js
+  - !resource d3@5
 
 css:
-  - https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css
+  - !resource normalize-css

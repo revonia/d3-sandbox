@@ -10,7 +10,7 @@ let tr = body
   .append('table')
   .selectAll('tr')
   .data(dataset) // first selectAll and data, create a group
-  .join('tr') // this join is shortcut of .enter().append('tr')
+  .join('tr') // this join is shortcut of .enter().append('tr') and .exit().remove()
   // .enter().append('tr')
 
 let td = tr.selectAll('td')

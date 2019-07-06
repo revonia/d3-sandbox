@@ -1,3 +1,5 @@
+import * as yaml from 'js-yaml'
+
 function loadResource (win, type, content) {
   const doc = win.document
   return new Promise((resolve, reject) => {
@@ -80,6 +82,21 @@ async function load (win, resource) {
   }
 }
 
+function makeSandboxConfigResolver (option) {
+  const resourcesMap = option.resourcesMap || {}
+
+  const SandboxConfigResourceYamlType = new yaml.Type('!resource', {
+    kind: 'scalar',
+    construct: name => resourcesMap[name] || name
+  })
+
+  const schema = yaml.Schema.create([
+    SandboxConfigResourceYamlType
+  ])
+
+  return text => yaml.load(text, { schema })
+}
+
 const iframeSrc = `javascript: '
 <!DOCTYPE html>
 <html lang="">
@@ -93,5 +110,6 @@ const iframeSrc = `javascript: '
 
 export {
   load,
-  iframeSrc
+  iframeSrc,
+  makeSandboxConfigResolver
 }

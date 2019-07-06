@@ -74,8 +74,7 @@
 </template>
 
 <script>
-import * as yaml from 'js-yaml'
-import { load, iframeSrc } from '../preview-loader'
+import { load, iframeSrc, makeSandboxConfigResolver } from '../preview-loader'
 
 export default {
   name: 'CodeSandbox',
@@ -125,6 +124,10 @@ export default {
     }
   },
   async mounted () {
+    this.configResolver = makeSandboxConfigResolver({ // not a vue data
+      resourcesMap: this.$themeConfig.resourcesMap
+    })
+
     this.loadSources()
 
     this.loading = true
@@ -168,7 +171,7 @@ export default {
         this.loading = true
         const el = this.$refs['editor']
 
-        this.editor = monaco.editor.create(el, {
+        this.editor = monaco.editor.create(el, { // not a vue data
           theme: 'vs-dark',
           minimap: {
             enabled: false
@@ -231,7 +234,7 @@ export default {
         let content = this.getTabData(tab.name).model.getValue()
 
         if (tab.language === 'yaml') {
-          content = yaml.safeLoad(content)
+          content = this.configResolver(content)
         }
 
         return {
@@ -256,6 +259,9 @@ export default {
 </script>
 
 <style>
+  .code-sandbox {
+    margin: 1em 0;
+  }
   .box {
     position: relative;
   }

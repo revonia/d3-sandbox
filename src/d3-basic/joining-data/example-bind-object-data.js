@@ -1,8 +1,8 @@
 const dataset = [
-  { id: 1, name: 'Alex', age: 30, gender: 'male' },
-  { id: 2, name: 'Bob', age: 24, gender: 'male' },
-  { id: 3, name: 'Catherine', age: 22, gender: 'female' },
-  { id: 4, name: 'Dan', age: 42, gender: 'male' }
+  { id: 1, name: 'Alex', votes: 0 },
+  { id: 2, name: 'Bob', votes: 0 },
+  { id: 3, name: 'Catherine', votes: 0 },
+  { id: 4, name: 'Dan', votes: 0 }
 ]
 
 const body = d3.select('body')
@@ -20,21 +20,43 @@ table.append('thead')
 const tbody = table.append('tbody')
 
 // then fill data
-function setData (dataset) {
-  const tr = tbody.selectAll('tr')
-    .data(dataset, row => row.id)
-
-  tr.style('color', 'blue')
-
-  tr.join('tr') // notice: shortcut of .enter().append('tr')
-
-  const td = tr.selectAll('td')
+function update (inputDataset) {
+  tbody
+    .selectAll('tr')
     .data(
-      row => head.map(key => row[key]) // make sure next 'join' will receive ordered array of data
+      inputDataset,
+      row => row.id
     )
+    .join(
+      enter => enter
+        .append('tr')
+        .selectAll('td')
+        .data(row => head.map(key => row[key]))
+        .enter()
+        .append('td')
+        .text(d => d),
 
-  td.join('td')
-    .text(d => d)
+      update => update
+        .style('color', 'blue')
+        .selectAll('td')
+        .data(row => head.map(key => row[key]))
+        .filter(d => d != null)
+        .text(d => d),
+
+      // reset
+      exit => exit.style('color', null)
+    )
 }
 
-setData(dataset)
+update(dataset)
+
+d3.interval(() => {
+  // random int between 0 and dataset.length - 1
+  const i = Math.floor(Math.random() * Math.floor(dataset.length))
+
+  dataset[i].votes++
+
+  update([
+    { id: dataset[i].id, votes: dataset[i].votes }
+  ])
+}, 1000)
