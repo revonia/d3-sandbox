@@ -30,6 +30,11 @@ function requestHandler (request, response) {
 
   let file = workDir + url.replace(base, dist).split('?')[0]
 
+  if (!fs.existsSync(file)) {
+    response.statusCode = 404
+    return response.end('Not Found')
+  }
+
   if (fs.lstatSync(file).isDirectory()) {
     file += '/index.html'
   }

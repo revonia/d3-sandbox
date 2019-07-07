@@ -1,6 +1,7 @@
 const docsConfig = require('../../src/base/docs-config-resolver')(__dirname + '/../docs-config.yaml')
+const { resolveResources } = require('../../src/base/resources-helper')
 
-const d3Script = docsConfig.resourcesMap['d3@5'].replace(/^\/d3-sandbox/, '')
+const resourcesHelper = resolveResources(__dirname + '/../resources.yaml', 'resources')
 
 module.exports = {
   title: 'D3 Sandbox',
@@ -26,11 +27,12 @@ module.exports = {
     editLinks: true,
     algolia: process.env.ALGOLIA_API_KEY == null
       ? {}
-      :{
+      : {
         apiKey: process.env.ALGOLIA_API_KEY,
         indexName: 'd3-sandbox'
       },
-    ...docsConfig
+    resourcesMap: resourcesHelper.map,
+    ...docsConfig,
   },
   plugins: {
     '@vuepress/pwa': {
@@ -52,17 +54,14 @@ module.exports = {
     ['link', { rel: 'shortcut icon', href: '/favicon.ico', type: 'image/x-icon', }],
     ['link', { rel: 'icon', href: '/images/icon/d3-sandbox192.png', }],
     ['link', { rel: 'manifest', href: '/manifest.json', type: 'application/manifest+json' }],
-    ['script', { type: 'application/javascript', src: d3Script }],
+    ['script', { type: 'application/javascript', src: resourcesHelper.map['d3@5'] }],
   ],
   extraWatchFiles: [
     'src'
   ],
   configureWebpack: (config, isServer) => {
-    if (!Array.isArray(config.plugins)) {
-      config.plugins = []
-    }
-
     if (!isServer) {
+      resourcesHelper.applyToWebpack(config)
     }
   }
 }

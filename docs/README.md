@@ -16,16 +16,13 @@ footer: MIT Licensed | Copyright © 2019-present Revonia
  
 ### 现在就来试试沙盒
 
-<CodeSandbox>
+<CodeSandbox initial-height="600px">
 
-<<< @/src/share/index.html
+<<< @/src/examples/world-map-labor-force-total/index.html
 
-<<< @/src/share/style.css
+<<< @/src/examples/world-map-labor-force-total/world-map-labor-force-total.js
 
-<<< @/src/simple-bar-chart/bar-chart.js
-
-<<< @/src/simple-bar-chart/dataset.json
-
-<<< @/src/config.yaml
+<<< @/src/examples/world-map-labor-force-total/config.yaml
 
 </CodeSandbox>
+

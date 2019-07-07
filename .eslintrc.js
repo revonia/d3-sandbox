@@ -13,7 +13,9 @@ module.exports = {
     "Atomics": "readonly",
     "SharedArrayBuffer": "readonly",
     "d3": "readonly",
-    "_": "readonly"
+    "_": "readonly",
+    "$sandbox": "readonly",
+    'topojson': 'readonly'
   },
   "parserOptions": {
     "ecmaVersion": 2019,

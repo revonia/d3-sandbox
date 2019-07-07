@@ -74,7 +74,7 @@
 </template>
 
 <script>
-import { load, iframeSrc, makeSandboxConfigResolver } from '../preview-loader'
+import Sandbox from '../Sandbox'
 
 export default {
   name: 'CodeSandbox',
@@ -124,10 +124,6 @@ export default {
     }
   },
   async mounted () {
-    this.configResolver = makeSandboxConfigResolver({ // not a vue data
-      resourcesMap: this.$themeConfig.resourcesMap
-    })
-
     this.loadSources()
 
     this.loading = true
@@ -220,7 +216,7 @@ export default {
 
       this.loading = false
     },
-    preview () {
+    async preview () {
       this.loading = true
       const el = this.$refs['previewBox']
       // clean up
@@ -230,25 +226,21 @@ export default {
 
       const frame = document.createElement('iframe')
 
-      let resource = this.tabs.map(tab => {
-        let content = this.getTabData(tab.name).model.getValue()
-
-        if (tab.language === 'yaml') {
-          content = this.configResolver(content)
-        }
-
+      let codes = this.tabs.map(tab => {
         return {
-          content: content,
+          code: this.getTabData(tab.name).model.getValue(),
           type: tab.type || tab.language
         }
       })
 
-      frame.onload = async () => {
-        await load(frame.contentWindow, resource)
-        this.loading = false
-      }
+      const sandbox = new Sandbox({
+        codes,
+        resourcesMap: { ...this.$themeConfig.resourcesMap },
+        base: this.$site.base,
+        lang: this.$lang
+      })
 
-      frame.src = iframeSrc
+      sandbox.attach(frame).then(() => { this.loading = false })
 
       el.appendChild(frame)
       this.showPreview = true

@@ -1,0 +1,6 @@
+js:
+  - !resource d3@5
+  - !resource topojson@3
+
+css:
+  - !resource normalize-css
