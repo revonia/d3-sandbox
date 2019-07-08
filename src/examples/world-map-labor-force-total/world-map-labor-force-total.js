@@ -1,12 +1,12 @@
-const svg = d3.select('body')
+const svg = d3.select('#chart')
   .append('svg')
   .attr('width', '100%')
-  .attr('height', '500px')
+  .attr('height', '550px')
 
 const rect = svg.node().getBoundingClientRect()
-const padding = 60
+const padding = 100
 const size = [rect.width - padding * 2, rect.height - padding * 2]
-const radius = d3.min(size) / 2
+const earthRadius = d3.min(size) / 2
 const range = [2000, 2018]
 const rotateSpeed = 0.02
 const topN = 40
@@ -14,8 +14,7 @@ const donutWidth = 15
 
 const projection = d3
   .geoOrthographic()
-  .scale(radius)
-  .translate([rect.width / 2, padding + radius])
+  .scale(earthRadius)
   .precision(0)
 
 const center = projection(projection.center())
@@ -24,31 +23,40 @@ const path = d3.geoPath(projection)
 ;(async function run () {
   const { land, countries, stat } = await loadData()
 
+  const defs = svg.append('defs')
+
   const scale = d3.scaleLinear()
     .domain([stat.min, stat.max])
 
   const colors = scale.copy().range(['#b3e2d7', '#00431b'])
+  const applyColors = defLinearGradient(defs, colors)
 
   const earth = svg.append('g')
-  const updateEarth = drawEarth(earth, land, countries, colors)
+  const earthUpdater = drawEarth(earth, land, countries, colors)
 
   const donut = svg.append('g')
-  const updateDonut = drawDonut(donut, stat, colors, radius + donutWidth, donutWidth)
+  const updateDonut = drawDonut(donut, stat, colors, earthRadius + donutWidth, donutWidth)
 
   const valueAxis = svg.append('g')
-  drawValueAxis(valueAxis, scale)
+  drawValueAxis(valueAxis, scale, applyColors)
 
-  const yearAxis = svg.append('g')
-  const updateYearAxis = drawYearAxis(yearAxis)
+  const yearLine = svg.append('g')
+  const updateYearAxis = drawYearLine(yearLine, stat)
 
+  let prevYear = range[0]
   d3.timer(function (elapsed) {
     const lambda = (rotateSpeed * elapsed) % 360
+    const year = range[0] + parseInt(elapsed / 2 / 1000) % (range[1] - range[0] + 1)
 
-    const year = range[0] + parseInt(elapsed / 3 / 1000) % (range[1] - range[0] + 1)
     projection.rotate([lambda, 0, 0])
-    updateEarth(year)
-    updateDonut(year)
-    updateYearAxis(year)
+    earthUpdater.updateRotate()
+
+    if (year !== prevYear) {
+      updateDonut(year)
+      updateYearAxis(year)
+      earthUpdater.updateColor(year)
+      prevYear = year
+    }
   })
 })()
 
@@ -137,7 +145,7 @@ async function loadData () {
     }
   )
 
-  const sliced = stat.slice(range[0], range[1])
+  const sliced = stat.slice(range[0], range[1] + 1)
   stat.min = d3.min(sliced, data => data.min)
   stat.max = d3.max(sliced, data => data.max)
 
@@ -150,55 +158,69 @@ async function loadData () {
   return { land, countries, stat, info }
 }
 
+function defLinearGradient (root, colors) {
+  const id = 'linearGradient-' + d3.randomUniform(0, 1)()
+  const [min, max] = colors.domain()
+  const data = d3.range(11, 0, -1).map(d => min + d * (max - min) / 11)
+  root.append('linearGradient')
+    .attr('gradientTransform', 'rotate(90)')
+    .attr('id', id)
+    .selectAll('stop')
+    .data(data)
+    .join('stop')
+    .attr('offset', (d, i) => (i * 10) + '%')
+    .attr('stop-color', d => colors(d))
+  return function apply (root) {
+    root.attr('fill', `url(#${id})`)
+  }
+}
+
 function drawEarth (root, land, countries, colors) {
   const landGroup = root.append('g')
+
+  root.classed('earth', true)
 
   landGroup.append('g')
     .classed('sea', true)
     .append('circle')
-    .attr('r', radius)
+    .attr('r', earthRadius)
     .attr('cx', center[0])
     .attr('cy', center[1])
     .style('fill', '#aaddff')
 
+  const landPath = landGroup.append('g')
+    .append('path')
+    .style('fill', '#ccc')
+
   const countriesGroup = root.append('g')
 
-  function update (year) {
-    landGroup
-      .select('g.land')
-      .selectAll('path')
-      .data([path(land)])
-      .join('path')
-      .attr('d', d => d)
-      .style('fill', '#ccc')
+  const countriesPaths = countriesGroup
+    .append('g')
+    .classed('countries', true)
+    .selectAll('path')
+    .data(countries, d => d.id)
+    .join('path')
+    .attr('d', d => path(d))
+    .attr('data-name', d => d.info.name)
+    .attr('data-id', d => d.id)
+    .attr('data-code', d => d.info.code)
+    .style('stroke', '#fff')
+    .style('stroke-width', 1)
 
-    const groups = countriesGroup
-      .selectAll('g')
-      .data(countries, d => d.id)
-      .join('g')
-
-    groups.selectAll('path')
-      .data(d => [{ path: path(d), ...d.info, data: d.data }])
-      .join('path')
-      .attr('d', d => d.path)
-      .attr('data-name', d => d.name)
-      .attr('data-id', d => d.id)
-      .attr('data-code', d => d.code)
-      .style('fill', d => colors(d.data && d.data[year] ? d.data[year] : 0))
-      .style('stroke', '#fff')
-      .style('stroke-width', 1)
-
-    // groups.selectAll('text')
-    //   .data(d => [{ ...d.info, center: projection(d.info.centroid) }])
-    //   .join('text')
-    //   .classed('name-label', true)
-    //   .attr('x', d => d.center[0])
-    //   .attr('y', d => d.center[1])
-    //   .text(d => d.id)
+  function updateRotate () {
+    landPath.attr('d', path(land))
+    countriesPaths.attr('d', d => path(d))
   }
 
-  update(range[0])
-  return update
+  function updateColor (year) {
+    countriesPaths.style('fill', d => colors(d.data && d.data[year] ? d.data[year] : 0))
+  }
+
+  updateColor(range[0])
+  return {
+    updateRotate,
+    updateColor
+  }
 }
 
 function drawDonut (root, stat, colors, innerRadius, width) {
@@ -224,26 +246,29 @@ function drawDonut (root, stat, colors, innerRadius, width) {
     root.selectAll('path')
       .data(data)
       .join('path')
+      .attr('data-code', d => d.data.code)
+      .attr('data-value', d => d.value)
+      .style('fill', d => colors(d.value))
+      .transition()
+      .duration(300)
       .attr('d', d => arc({
         ...d,
         innerRadius: innerRadius,
         outerRadius: innerRadius + width
       }))
-      .attr('data-code', d => d.data.code)
-      .attr('data-value', d => d.value)
-      .style('fill', d => colors(d.value))
   }
 
   update(range[0])
   return update
 }
 
-function drawValueAxis (root, scale) {
-  const height = 440
-  const ticksCount = 20
-  const axis = d3.axisRight(scale.copy().range([0, height])).ticks(ticksCount)
+function drawValueAxis (root, scale, applyColors) {
+  const height = 100
+  const width = 10
+
+  const axis = d3.axisRight(scale.copy().range([height, 0]))
   const position = {
-    x: center[0] + radius + 2 * donutWidth + padding / 2,
+    x: center[0] + earthRadius + 2 * width + padding,
     y: padding / 2
   }
 
@@ -251,21 +276,78 @@ function drawValueAxis (root, scale) {
 
   root.append('g')
     .call(axis)
+    .attr('transform', `translate(${width}, 0)`)
 
-  // root.append('g')
-  //   .selectAll('rect')
-  //   .data(d3.range(0, height, height / ticksCount))
-  //   .join('rect')
-  //   .attr('width', 30)
-  //   .attr('height', height / ticksCount)
-  //   .attr('x', position.x)
-  //   .attr('y', d => d)
-  //   .attr('fill', 'red')
+  root.append('g')
+    .append('rect')
+    .attr('width', width)
+    .attr('height', height + 1)
+    .call(applyColors)
 }
 
-function drawYearAxis () {
-  function update (year) {
+function drawYearLine (root, stat) {
+  const sliced = stat.slice(range[0], range[1] + 1)
+  const parseYear = d3.timeParse('%Y')
+  const width = 600
+  const height = 50
+  const [min, max] = d3.extent(sliced, d => d.total)
+  const indicatorWidth = width / (range[1] - range[0])
+  const xScale = d3.scaleTime()
+    .domain([parseYear(range[0]), parseYear(range[1])])
+    .range([0, width])
+  const yScale = d3.scaleLinear().domain([min * 0.9, max]).range([height, 0])
 
+  const position = {
+    x: center[0] - width / 2,
+    y: padding + earthRadius * 2 + donutWidth
   }
+
+  root.attr('transform', `translate(${position.x}, ${position.y})`)
+
+  const line = d3.line()
+    .x(d => xScale(parseYear(d.year)))
+    .y(d => yScale(d.total))
+    .curve(d3.curveMonotoneX)
+
+  root.append('g')
+    .call(d3.axisBottom(xScale))
+    .attr('transform', 'translate(0,' + height + ')')
+
+  root.append('path')
+    .datum(sliced)
+    .attr('d', line)
+    .attr('fill', 'none')
+    .attr('stroke', '#aaddff')
+    .attr('stroke-width', 1)
+
+  root.append('g')
+    .selectAll('circle')
+    .data(sliced)
+    .join('circle')
+    .attr('cx', d => xScale(parseYear(d.year)))
+    .attr('cy', d => yScale(d.total))
+    .attr('r', 2)
+    .attr('fill', '#aaddff')
+    .attr('stroke', 'write')
+
+  const indicator = root.append('rect')
+    .classed('indicator', true)
+    .attr('width', indicatorWidth)
+    .attr('height', height + 30)
+    .attr('fill', '#aaddff')
+    .attr('transform', `translate(${toX(range[0])}, -5)`)
+    .attr('opacity', 0.5)
+
+  function toX (year) {
+    return xScale(parseYear(year)) - indicatorWidth / 2
+  }
+
+  function update (year) {
+    indicator
+      .transition()
+      .duration(300)
+      .attr('transform', `translate(${toX(year)}, -5)`)
+  }
+
   return update
 }

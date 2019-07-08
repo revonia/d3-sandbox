@@ -14,6 +14,9 @@ nav:
   - text: d3js.org
     link: https://d3js.org/
 
+  - text: d3.js API
+    link: https://github.com/d3/d3/blob/master/API.md
+
 sidebar:
   /d3-basic/:
     - !doc-category
