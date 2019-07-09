@@ -54,7 +54,7 @@ module.exports = {
     ['link', { rel: 'shortcut icon', href: '/favicon.ico', type: 'image/x-icon', }],
     ['link', { rel: 'icon', href: '/images/icon/d3-sandbox192.png', }],
     ['link', { rel: 'manifest', href: '/manifest.json', type: 'application/manifest+json' }],
-    ['script', { type: 'application/javascript', src: resourcesHelper.map['d3@5'] }],
+    ['script', { type: 'application/javascript', src: resourcesHelper.map['d3@5'], defer: true, async: true }],
   ],
   extraWatchFiles: [
     'src'
