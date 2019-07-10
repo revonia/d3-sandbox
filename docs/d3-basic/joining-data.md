@@ -9,6 +9,7 @@
   * selection.join
   * selection.enter
   * selection.exit
+  * selection.datum
 * API 文档
   * [d3-selection joining data](https://github.com/d3/d3-selection#joining-data)
 
@@ -101,7 +102,28 @@ d3.js 默认以元素个数和数据个数最小的为主，依次应用后面�
 
 ::: tip
 d3-selection 中， 不再提供 `update()` API，因为写在 `exit()` 之前的代码，效果和 `update()` 一致，
-推荐继续阅读 [General Update Pattern](https://bl.ocks.org/mbostock/3808218)
+推荐继续阅读 [General Update Pattern](https://bl.ocks.org/mbostock/3808218)。
 :::
+
+## 获取和设置元素的数据 selection.datum
+这是一个与 `selection.data` 完全不一样的 API，使用这个方法不会连接数据集，也不会提供 `enter` 和 `exit` 选集。
+而是根据参数不同，提供设置数据、获取数据的功能：
+
+`selection.datum([value])`
+
+* 如果不提供参数，那么返回选集中的**第一个非 null元素**上绑定的数据
+* 如果提供一个值，那么将选集中的所有元素都将绑定到这个值
+* 如果提供一个函数，这个函数将对选集中的每个元素都执行一遍，函数能够接收到当前元素绑定的数据 `d`、索引 `i` 和当前组 `nodes`，
+  函数返回值将依次绑定在元素上。
+
+<CodeSandbox initial-height="500px">
+
+<<< @/src/config.yaml
+
+<<< @/src/d3-basic/joining-data/example-datum.js
+
+<<< @/src/d3-basic/joining-data/example-datum.html
+
+</CodeSandBox>
 
 <Vssue :title="$title"/>

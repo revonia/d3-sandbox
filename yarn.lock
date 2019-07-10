@@ -7284,6 +7284,11 @@ vuepress-plugin-container@^2.0.0:
   dependencies:
     markdown-it-container "^2.0.0"
 
+vuepress-plugin-seo@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.npm.taobao.org/vuepress-plugin-seo/download/vuepress-plugin-seo-0.1.2.tgz#132e656274bfaffce72e816fb8450951f3f6cc13"
+  integrity sha1-Ey5lYnS/r/znLoFvuEUJUfP2zBM=
+
 vuepress@1.0.1:
   version "1.0.1"
   resolved "https://registry.npm.taobao.org/vuepress/download/vuepress-1.0.1.tgz#dae4a838ae194f2a85909bf4b05ef80311c745bd"

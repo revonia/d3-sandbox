@@ -1,0 +1,30 @@
+<fieldset>
+  <legend>Get binding data</legend>
+  <ul id="sports">
+    <li id="basketball">basketball spectators: <span></span></li>
+    <li>football spectators: <span></span></li>
+    <li>tennis spectators: <span></span></li>
+  </ul>
+  <button onclick="getBasketballSpectators()">Get basketball spectators</button>
+</fieldset>
+
+<fieldset>
+  <legend>Set binding data</legend>
+  <p>Set binding data：</p>
+  <ul id="movies">
+    <li>The Shawshank Redemption left: <span></span> tickets</li>
+    <li id="fight-club">Fight Club left: <span></span> tickets</li>
+    <li>The Truman Show left: <span></span> tickets</li>
+  </ul>
+  <button onclick="setFightClubTicketsToZero()">Set Fight Club left tickets to zero</button>
+</fieldset>
+
+<fieldset>
+  <legend>HTML 5 custom data attributes to binding data</legend>
+  <ul id="fruits">
+    <li data-total="2">apple total: <span>?</span></li>
+    <li data-total="5">banana total: <span>?</span></li>
+    <li data-total="10">orange total: <span>?</span></li>
+  </ul>
+  <button onclick="updateFruitsTotal()">Update fruits total</button>
+</fieldset>

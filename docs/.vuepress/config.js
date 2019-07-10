@@ -49,6 +49,7 @@ module.exports = {
       clientId: process.env.OAUTH_CLIENT_ID || 'id',
       clientSecret: process.env.OAUTH_CLIENT_SECRET || 'secret',
     },
+    'seo': {}
   },
   head: [
     ['link', { rel: 'shortcut icon', href: '/favicon.ico', type: 'image/x-icon', }],
