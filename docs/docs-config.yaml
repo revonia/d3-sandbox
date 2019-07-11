@@ -21,3 +21,7 @@ sidebar:
   /d3-basic/:
     - !doc-category
       dir: /docs/d3-basic
+
+  /examples/:
+    - !doc-category
+      dir: /docs/examples

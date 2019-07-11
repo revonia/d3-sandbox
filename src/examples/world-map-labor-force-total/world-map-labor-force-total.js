@@ -3,10 +3,10 @@ const svg = d3.select('#chart')
   .attr('width', '100%')
   .attr('height', '550px')
 
-const rect = svg.node().getBoundingClientRect()
-const padding = 100
-const size = [rect.width - padding * 2, rect.height - padding * 2]
-const earthRadius = d3.min(size) / 2
+const { width: svgWidth } = svg.node().getBoundingClientRect()
+const padding = 80
+const earthRadius = 175
+const earthCenter = [svgWidth / 2, padding + earthRadius]
 const range = [2000, 2018]
 const rotateSpeed = 0.02
 const topN = 40
@@ -14,10 +14,9 @@ const donutWidth = 15
 
 const projection = d3
   .geoOrthographic()
+  .translate(earthCenter)
   .scale(earthRadius)
-  .precision(0)
 
-const center = projection(projection.center())
 const path = d3.geoPath(projection)
 
 ;(async function run () {
@@ -46,6 +45,8 @@ const path = d3.geoPath(projection)
   let prevYear = range[0]
   d3.timer(function (elapsed) {
     const lambda = (rotateSpeed * elapsed) % 360
+
+    // change year every 2 seconds, inaccurate
     const year = range[0] + parseInt(elapsed / 2 / 1000) % (range[1] - range[0] + 1)
 
     projection.rotate([lambda, 0, 0])
@@ -60,6 +61,12 @@ const path = d3.geoPath(projection)
   })
 })()
 
+/**
+ * skip initial n line
+ * @param text
+ * @param n
+ * @return {string}
+ */
 function skipLine (text, n) {
   let pos = -1
   while (n > 0) {
@@ -69,6 +76,12 @@ function skipLine (text, n) {
   return text.substring(pos + 1)
 }
 
+/**
+ * [sort] by value desc
+ * @param a
+ * @param b
+ * @return {number}
+ */
 function byValueDesc (a, b) {
   return b.value - a.value
 }
@@ -124,6 +137,7 @@ async function loadData () {
   const info = new Map()
   await d3.tsv(
     $sandbox.getResource('world-atlas@1/110m.tsv'),
+    // index countries info by id and code
     ({ iso_n3: id, iso_a3: code, name }) => {
       const data = { id, code, name }
       info.set(id, data)
@@ -136,9 +150,11 @@ async function loadData () {
   const csv = '/resources/dataset/world-bank/labor-force-total-2018/API_SL.TLF.TOTL.IN_DS2_en_csv_v2_7748.csv'
   const data = new Map()
   d3.csvParse(
+    // initial 4 lines are useless
     skipLine(await d3.text($sandbox.withBase(csv)), 4),
     row => {
       const code = row['Country Code']
+      // the origin data contains some lines we don't need
       if (info.has(code)) {
         data.set(code, calculate(stat, code, row))
       }
@@ -161,7 +177,9 @@ async function loadData () {
 function defLinearGradient (root, colors) {
   const id = 'linearGradient-' + d3.randomUniform(0, 1)()
   const [min, max] = colors.domain()
+  // 100% - 0%, 11 colors for define gradient
   const data = d3.range(11, 0, -1).map(d => min + d * (max - min) / 11)
+
   root.append('linearGradient')
     .attr('gradientTransform', 'rotate(90)')
     .attr('id', id)
@@ -170,6 +188,7 @@ function defLinearGradient (root, colors) {
     .join('stop')
     .attr('offset', (d, i) => (i * 10) + '%')
     .attr('stop-color', d => colors(d))
+
   return function apply (root) {
     root.attr('fill', `url(#${id})`)
   }
@@ -184,8 +203,8 @@ function drawEarth (root, land, countries, colors) {
     .classed('sea', true)
     .append('circle')
     .attr('r', earthRadius)
-    .attr('cx', center[0])
-    .attr('cy', center[1])
+    .attr('cx', earthCenter[0])
+    .attr('cy', earthCenter[1])
     .style('fill', '#aaddff')
 
   const landPath = landGroup.append('g')
@@ -217,6 +236,7 @@ function drawEarth (root, land, countries, colors) {
   }
 
   updateColor(range[0])
+
   return {
     updateRotate,
     updateColor
@@ -238,7 +258,7 @@ function drawDonut (root, stat, colors, innerRadius, width) {
       return b.value - a.value
     })
 
-  root.attr('transform', `translate(${center[0]}, ${center[1]})`)
+  root.attr('transform', `translate(${earthCenter[0]}, ${earthCenter[1]})`)
 
   function update (year) {
     const data = pie(stat[year].top)
@@ -268,7 +288,7 @@ function drawValueAxis (root, scale, applyColors) {
 
   const axis = d3.axisRight(scale.copy().range([height, 0]))
   const position = {
-    x: center[0] + earthRadius + 2 * width + padding,
+    x: earthCenter[0] + earthRadius + width + padding,
     y: padding / 2
   }
 
@@ -288,7 +308,7 @@ function drawValueAxis (root, scale, applyColors) {
 function drawYearLine (root, stat) {
   const sliced = stat.slice(range[0], range[1] + 1)
   const parseYear = d3.timeParse('%Y')
-  const width = 600
+  const width = svgWidth * 0.6
   const height = 50
   const [min, max] = d3.extent(sliced, d => d.total)
   const indicatorWidth = width / (range[1] - range[0])
@@ -298,8 +318,8 @@ function drawYearLine (root, stat) {
   const yScale = d3.scaleLinear().domain([min * 0.9, max]).range([height, 0])
 
   const position = {
-    x: center[0] - width / 2,
-    y: padding + earthRadius * 2 + donutWidth
+    x: earthCenter[0] - width / 2,
+    y: padding + earthRadius * 2 + donutWidth * 3
   }
 
   root.attr('transform', `translate(${position.x}, ${position.y})`)
