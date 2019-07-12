@@ -11,13 +11,9 @@ const range = [2000, 2018]
 const rotateSpeed = 0.02
 const topN = 40
 const donutWidth = 15
-
-const projection = d3
-  .geoOrthographic()
-  .translate(earthCenter)
-  .scale(earthRadius)
-
-const path = d3.geoPath(projection)
+const colorsRange = ['#b3e2d7', '#00431b']
+const interval = 2
+const basicColor = '#aaddff'
 
 ;(async function run () {
   const { land, countries, stat } = await loadData()
@@ -27,7 +23,7 @@ const path = d3.geoPath(projection)
   const scale = d3.scaleLinear()
     .domain([stat.min, stat.max])
 
-  const colors = scale.copy().range(['#b3e2d7', '#00431b'])
+  const colors = scale.copy().range(colorsRange)
   const applyColors = defLinearGradient(defs, colors)
 
   const earth = svg.append('g')
@@ -44,13 +40,10 @@ const path = d3.geoPath(projection)
 
   let prevYear = range[0]
   d3.timer(function (elapsed) {
-    const lambda = (rotateSpeed * elapsed) % 360
-
     // change year every 2 seconds, inaccurate
-    const year = range[0] + parseInt(elapsed / 2 / 1000) % (range[1] - range[0] + 1)
+    const year = range[0] + parseInt(elapsed / interval / 1000) % (range[1] - range[0] + 1)
 
-    projection.rotate([lambda, 0, 0])
-    earthUpdater.updateRotate()
+    earthUpdater.updateRotate(elapsed)
 
     if (year !== prevYear) {
       updateDonut(year)
@@ -195,6 +188,13 @@ function defLinearGradient (root, colors) {
 }
 
 function drawEarth (root, land, countries, colors) {
+  const projection = d3
+    .geoOrthographic()
+    .translate(earthCenter)
+    .scale(earthRadius)
+
+  const path = d3.geoPath(projection)
+
   const landGroup = root.append('g')
 
   root.classed('earth', true)
@@ -205,7 +205,7 @@ function drawEarth (root, land, countries, colors) {
     .attr('r', earthRadius)
     .attr('cx', earthCenter[0])
     .attr('cy', earthCenter[1])
-    .style('fill', '#aaddff')
+    .style('fill', basicColor)
 
   const landPath = landGroup.append('g')
     .append('path')
@@ -226,7 +226,9 @@ function drawEarth (root, land, countries, colors) {
     .style('stroke', '#fff')
     .style('stroke-width', 1)
 
-  function updateRotate () {
+  function updateRotate (elapsed) {
+    const lambda = (rotateSpeed * elapsed) % 360
+    projection.rotate([lambda, 0, 0])
     landPath.attr('d', path(land))
     countriesPaths.attr('d', d => path(d))
   }
@@ -337,7 +339,7 @@ function drawYearLine (root, stat) {
     .datum(sliced)
     .attr('d', line)
     .attr('fill', 'none')
-    .attr('stroke', '#aaddff')
+    .attr('stroke', basicColor)
     .attr('stroke-width', 1)
 
   root.append('g')
@@ -347,14 +349,14 @@ function drawYearLine (root, stat) {
     .attr('cx', d => xScale(parseYear(d.year)))
     .attr('cy', d => yScale(d.total))
     .attr('r', 2)
-    .attr('fill', '#aaddff')
+    .attr('fill', basicColor)
     .attr('stroke', 'write')
 
   const indicator = root.append('rect')
     .classed('indicator', true)
     .attr('width', indicatorWidth)
     .attr('height', height + 30)
-    .attr('fill', '#aaddff')
+    .attr('fill', basicColor)
     .attr('transform', `translate(${toX(range[0])}, -5)`)
     .attr('opacity', 0.5)
 

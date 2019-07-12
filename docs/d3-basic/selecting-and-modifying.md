@@ -2,7 +2,7 @@
 
 ## 说明
 * 本文档对应版本
-  * d3.js v5
+  * D3.js v5
   * d3-selection v1.4
 * 主要使用到的 API
   * select
@@ -20,12 +20,12 @@
   * [d3-selection selecting-elements](https://github.com/d3/d3-selection#selecting-elements)
   * [d3-selection modifying-elements](https://github.com/d3/d3-selection#modifying-elements)
 
-## 使用 d3.js 操作元素
-如果你会使用 [jQuery](https://jquery.com/)，那么肯定能很快上手 d3.js 操作元素的 API，它们之间十分相似，
-这个网站没有使用 jQuery，使用 d3.js 来绘制的图形，你可以随时使用沙盒或者打开浏览器的调试工具验证你的想法！
+## 使用 D3.js 操作元素
+如果你会使用 [jQuery](https://jquery.com/)，那么肯定能很快上手 D3.js 操作元素的 API，它们之间十分相似，
+这个网站没有使用 jQuery，使用 D3.js 来绘制的图形，你可以随时使用沙盒或者打开浏览器的调试工具验证你的想法！
 
 ### 选择元素
-d3.js 中，`select` 用来选择一个元素，`selectAll` 用来选择多个元素，
+D3.js 中，`select` 用来选择一个元素，`selectAll` 用来选择多个元素，
 这两个方法的参数可以为 W3C 选择器字符串 [W3C selector strings](https://www.w3.org/TR/selectors-api/)，
 如果你阅读 [`select` 代码](https://github.com/d3/d3-selection/blob/v1.4.0/src/select.js) 或 
 [`selectAll` 代码](https://github.com/d3/d3-selection/blob/v1.4.0/src/selectAll.js)
@@ -36,8 +36,7 @@ d3.js 中，`select` 用来选择一个元素，`selectAll` 用来选择多个�
 使用 `selection.method` 表示，与 `d3.method` 区分开。
 
 #### 选集对象 `Collection` 的 `select`、`selectAll`
-选集对象的 `selection.select`、`selection.selectAll` 与 `d3.select`、`d3.selectAll` 有一些略微的差别，
-`selection.select`、`selection.selectAll` 的参数可以为一个函数，你可以选择选集中所有元素的父节点，或者依据数据选择元素：
+`select`、`selectAll` 在选集对象上有一些略微的差别，选集上，两个方法的参数可以为一个函数，以便你选择选集中所有元素的父节点，或者依据数据选择元素：
 
 <CodeSandbox>
 
@@ -77,3 +76,5 @@ even = d3.selectAll("tr").filter((d, i) => i & 1);
 ::: tip
 对于 `selection.classed`，`names` 参数可以是空格分割的类列表，而 `value` 应该是 `true` (truthy) 或 `false` 或者返回上述值的函数，来表示类的有无。
 :::
+
+<Vssue :title="$title"/>
