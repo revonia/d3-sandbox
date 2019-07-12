@@ -16,14 +16,15 @@
     "serve-local": "node serve-local.js"
   },
   "dependencies": {
-    "@vssue/api-github-v3": "^1.0.0",
-    "@vssue/vuepress-plugin-vssue": "^1.0.2",
+    "eventemitter3": "^4.0.0",
     "js-yaml": "^3.13.1",
-    "monaco-editor": "^0.17.0",
-    "zip-webpack-plugin": "^3.0.0"
+    "monaco-editor": "^0.17.0"
   },
   "devDependencies": {
+    "@vssue/api-github-v3": "^1.0.0",
+    "@vssue/vuepress-plugin-vssue": "^1.0.2",
     "@vuepress/plugin-pwa": "^1.0.2",
+    "@vuepress/theme-default": "latest",
     "babel-eslint": "^10.0.2",
     "copy-webpack-plugin": "^5.0.3",
     "cross-env": "^5.2.0",
@@ -39,6 +40,7 @@
     "lodash": "^4.17.11",
     "standard": "^12.0.1",
     "vuepress": "1.0.1",
-    "vuepress-plugin-seo": "^0.1.2"
+    "vuepress-plugin-seo": "^0.1.2",
+    "zip-webpack-plugin": "^3.0.0"
   }
 }

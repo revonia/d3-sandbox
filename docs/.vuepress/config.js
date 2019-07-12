@@ -8,6 +8,7 @@ module.exports = {
   description: 'Play with D3.js',
   base: '/d3-sandbox/',
   dest: 'dist',
+  theme: 'src/base/sandbox-doc/index.js',
   markdown: {
     lineNumbers: true
   },
@@ -38,9 +39,6 @@ module.exports = {
     '@vuepress/pwa': {
       updatePopup: true,
       serviceWorker: true,
-    },
-    '@vuepress/register-components': {
-      componentsDir: 'src/base/global-components'
     },
     '@vssue/vuepress-plugin-vssue': {
       platform: 'github',

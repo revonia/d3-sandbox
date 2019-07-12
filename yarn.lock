@@ -889,9 +889,10 @@
     semver "^6.0.0"
     upath "^1.1.0"
 
-"@vuepress/theme-default@^1.0.1":
+"@vuepress/theme-default@^1.0.1", "@vuepress/theme-default@latest":
   version "1.0.2"
   resolved "https://registry.npm.taobao.org/@vuepress/theme-default/download/@vuepress/theme-default-1.0.2.tgz#7678c4755db9d891effee838991287d31ae9c5ed"
+  integrity sha1-dnjEdV252JHv/ug4mRKH0xrpxe0=
   dependencies:
     "@vuepress/plugin-active-header-links" "^1.0.2"
     "@vuepress/plugin-nprogress" "^1.0.2"
@@ -3118,6 +3119,11 @@ etag@~1.8.1:
 eventemitter3@^3.0.0:
   version "3.1.2"
   resolved "https://registry.npm.taobao.org/eventemitter3/download/eventemitter3-3.1.2.tgz?cache=0&sync_timestamp=1560950873670&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Feventemitter3%2Fdownload%2Feventemitter3-3.1.2.tgz#2d3d48f9c346698fce83a85d7d664e98535df6e7"
+
+eventemitter3@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.npm.taobao.org/eventemitter3/download/eventemitter3-4.0.0.tgz?cache=0&sync_timestamp=1560950873670&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Feventemitter3%2Fdownload%2Feventemitter3-4.0.0.tgz#d65176163887ee59f386d64c82610b696a4a74eb"
+  integrity sha1-1lF2FjiH7lnzhtZMgmELaWpKdOs=
 
 events@^1.1.0:
   version "1.1.1"

@@ -74,7 +74,7 @@
 </template>
 
 <script>
-import Sandbox from '../Sandbox'
+import Sandbox from '../../Sandbox'
 
 export default {
   name: 'CodeSandbox',
@@ -127,7 +127,7 @@ export default {
     this.loadSources()
 
     this.loading = true
-    const monaco = await import('../editor')
+    const monaco = await import('../../editor')
     this.renderEditor(monaco)
     if (this.previewFirst) {
       this.preview()
@@ -314,6 +314,7 @@ export default {
     color: white;
   }
 
+  /*noinspection CssUnusedSymbol*/
   .tab-btn.active {
     background-color: #424242;
   }
