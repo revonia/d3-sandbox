@@ -2,6 +2,7 @@
   <div
     ref="block"
     class="scene-block"
+    :style="style"
     :data-scene-block-name="name"
   >
     <slot />
@@ -11,40 +12,34 @@
 <script>
 
 import { narratorPage } from '../componments/NarratorPage'
+import { debounce } from 'lodash'
 
-const listenFlag = {}
+const listenFlag = Symbol('sceneBlockListen')
 const sceneMap = new Map()
 
-function onScroll () {
+const onScroll = debounce(() => {
   const header = document.querySelector('header')
   const topPad = header ? header.offsetHeight : 0
 
-  for (let [, opt] of sceneMap) {
-    const { top, bottom } = opt.block.getBoundingClientRect()
-    if (bottom - topPad <= 0 || top - topPad > 0) {
-      opt.outView()
-    } else {
-      opt.inView()
-    }
+  for (let [, update] of sceneMap) {
+    update(topPad)
   }
-}
+})
 
-function attach (name, block, inView, outView) {
-  if (document['$$sceneBlockListen'] !== listenFlag) {
+function attach (name, update) {
+  if (document[listenFlag] !== true) {
     document.addEventListener('scroll', onScroll)
+    document[listenFlag] = true
   }
-  sceneMap.set(name, {
-    name: name,
-    inView,
-    outView,
-    block
-  })
+
+  sceneMap.set(name, update)
 }
 
 function detach (name) {
   sceneMap.delete(name)
   if (sceneMap.size === 0) {
     document.removeEventListener('scroll', onScroll)
+    document[listenFlag] = false
   }
 }
 
@@ -57,6 +52,10 @@ export default {
     name: {
       required: true,
       type: String
+    },
+    vh: {
+      type: Number,
+      default: null
     }
   },
   data () {
@@ -64,34 +63,34 @@ export default {
       entered: false
     }
   },
+  computed: {
+    style () {
+      if (this.vh) {
+        return { minHeight: this.vh + 'vh' }
+      }
+      return null
+    }
+  },
   mounted () {
-    attach(this.name, this.$refs.block, this.inView, this.outView)
+    attach(this.name, this.updateState)
   },
   beforeDestroy () {
     detach(this.name)
   },
   methods: {
-    inView () {
+    updateState (topPad) {
       if (!this.narratorPage) {
         return
       }
+      const { top, bottom } = this.$refs.block.getBoundingClientRect()
 
-      if (!this.entered) {
-        this.entered = true
-        this.narratorPage.$emit('enter.scene-block', {
-          scene: this.name
-        })
-      }
-    },
-    outView () {
-      if (!this.narratorPage) {
-        return
-      }
+      const enter = bottom - topPad > 0 && top - topPad < 0
 
-      if (this.entered) {
-        this.entered = false
-        this.narratorPage.$emit('exit.scene-block', {
-          scene: this.name
+      if (enter !== this.entered) {
+        this.entered = enter
+        this.narratorPage.$emit(`scene-block-transit`, {
+          scene: this.name,
+          enter
         })
       }
     }
@@ -101,7 +100,7 @@ export default {
 
 <style>
   /*noinspection CssUnusedSymbol*/
-  .theme-default-content .scene-block:last-child {
+  .scene-block.full-height {
     min-height: 90vh;
   }
 </style>

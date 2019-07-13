@@ -1,98 +1,27 @@
 ---
 layout: NarratorLayout
-narratorScene: src/d3-basic/digging-deeper-collection-dataset/scene.js
+stage: digging-deeper-collection-dataset
 ---
 
 # 深入理解：选集和数据集
 
-<SceneBlock name="s1">
+## 更进一步
+在前面两篇文章中，介绍了选择元素和连接数据的 API，使用沙盒演示了这些 API 如何使用，相信你在手动实验后，
+对 D3.js 的选集和数据连接有了一定的理解，现在让我们更深入地理解它们的工作原理！
 
-## s1
+<SceneBlock name="hi-narrator" vh="100">
 
-* Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut a urna placerat, fermentum sapien id, tempus tortor. Cras vitae sagittis nunc. Sed ligula diam, ornare ac massa nec, venenatis tempor metus. Proin feugiat accumsan ipsum, vel scelerisque ligula tristique ornare. Maecenas convallis justo id varius ultricies. Aliquam ac facilisis leo. Mauris semper lorem at orci sagittis, et consectetur diam ultricies. In vel arcu metus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
-  
-* 1
-* 1
-* 1
-* 1
-* 1
-* 1
-* 1
-* 1
-* 1
-* 1
-* 1
-* 1
-* 1
-* 1
-* 1
-* 1
-* 1
-* 1
-* 1
+## 旁白模式
+为了让你能更快速直观地理解这篇文章，向你隆重介绍：旁白模式！
 
-</SceneBlock>
+::: tip
 
-<SceneBlock name="s2">
-
-## s2
-
-* 2
-* 2
-* 2
-* 2
-* 2
-* 2
-* 2
-* 2
-* 2
-* 2
-* 2
-* 2
-* 2
-* 2
-* 2
-* 2
-* 2
-* 2
-* 2
-* 2
-* 2
-
-</SceneBlock>
-
-<SceneBlock name="s3">
-
-## s3
-
-* 3
-* 3
-* 3
-* 3
-* 3
-* 3
-* 3
-* 3
-* 3
-* 3
-* 3
-* 3
-* 3
-* 3
-* 3
-* 3
-* 3
-* 3
-* 3
-* 3
-* 3
-* 3
-
-</SceneBlock>
-
-
-::: slot narrator-scene
-
-<NarratorScene narrator="digging-deeper-collection-dataset"/>
+请将页面滚动到这一节。
 
 :::
+
+::: tip
+这篇文章还在编写
+:::
+
+</SceneBlock>

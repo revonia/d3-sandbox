@@ -5,8 +5,8 @@ docCategory:
    link: selecting-and-modifying
  - text: 连接数据集
    link: joining-data
- - text: 深入理解：选集和数据集
-   link: digging-deeper-collection-dataset
+ #- text: 深入理解：选集和数据集
+ #  link: digging-deeper-collection-dataset
 ---
 # 简介
 D3.js 是基于提供的数据绘制图表的 JavaScript 库，通过选择元素得到的选集加数据集，配合一系列助手方法（API），
@@ -42,4 +42,4 @@ d3.select('body')
   .style('width', d => scale(d) + 'px')
 ```
 
-在这分文档中，包含 D3.js 的基础知识、常用 API 的使用方法，带你快速入门。
+在这份文档中，包含 D3.js 的基础知识、常用 API 的使用方法，带你快速入门。

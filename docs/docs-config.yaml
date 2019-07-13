@@ -25,3 +25,6 @@ sidebar:
   /examples/:
     - !doc-category
       dir: /docs/examples
+
+stages:
+  - digging-deeper-collection-dataset

@@ -5,7 +5,7 @@
       <Content class="theme-default-content" />
       <div class="narrator-scene-box">
         <div class="narrator-scene">
-          <Content slot-key="narrator-scene" />
+          <NarratorStage :scene="currentScene" />
         </div>
       </div>
     </div>
@@ -73,12 +73,26 @@
 <script>
 // noinspection NpmUsedModulesInstalled
 import DefaultPage from '@parent-theme/components/Page'
+import NarratorStage from './NarratorStage'
 
 export const narratorPage = Symbol('narratorPage')
 
 export default {
-  name: 'Page',
+  name: 'NarratorPage',
+  components: {
+    NarratorStage
+  },
   extends: DefaultPage,
+  data () {
+    return {
+      currentScene: null
+    }
+  },
+  mounted () {
+    this.$on('scene-block-transit', ({ scene, enter }) => {
+      this.currentScene = enter ? scene : null
+    })
+  },
   provide () {
     return {
       [narratorPage]: this
