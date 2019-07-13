@@ -27,7 +27,7 @@ self.addEventListener('message', (event) => {
 self.__precacheManifest = [
   {
     "url": "404.html",
-    "revision": "4d9d4e108e7f65af133e2a66c35a132b"
+    "revision": "8e3a2a3aa9a38fe56ebbd494babbf7f2"
   },
   {
     "url": "assets/css/0.styles.703e35be.css",
@@ -150,8 +150,8 @@ self.__precacheManifest = [
     "revision": "00a858dc9d4171661f05d2453e165614"
   },
   {
-    "url": "assets/js/app.749c5916.js",
-    "revision": "29fcb2fa42641bd8307c72d4f82ded60"
+    "url": "assets/js/app.3d2e17b7.js",
+    "revision": "0b08d2c5dcee211316d756777ec4587d"
   },
   {
     "url": "assets/js/vendors~docsearch.4762853e.js",
@@ -159,31 +159,31 @@ self.__precacheManifest = [
   },
   {
     "url": "d3-basic/digging-deeper-collection-dataset.html",
-    "revision": "f6ef1ea51fd488cd1f983e8899f684f0"
+    "revision": "4ea04923483e7f76f82ba4fe22a14290"
   },
   {
     "url": "d3-basic/index.html",
-    "revision": "4d22ba2a66097f5363d40fc018e1a29d"
+    "revision": "bf5e0b269e6e46abd10565c148195677"
   },
   {
     "url": "d3-basic/joining-data.html",
-    "revision": "9d6c3e9bd1f1cb7d1b74c976582f83cd"
+    "revision": "0e38c45555f47cb0587747f989ae26cf"
   },
   {
     "url": "d3-basic/selecting-and-modifying.html",
-    "revision": "6669db4a683bd8c42056e101751b48c7"
+    "revision": "8255ab2ee076de93ded1c645fad078e7"
   },
   {
     "url": "examples/index.html",
-    "revision": "9b967be19551424c101db4fe3001b31c"
+    "revision": "ac82647ad3f517728b077c138758ca3d"
   },
   {
     "url": "examples/line-charts.html",
-    "revision": "b24394b782a956a0ee1cbc42ca133f60"
+    "revision": "bd2684b2cd83d767e332e4cc08c63adc"
   },
   {
     "url": "examples/world-map-labor-force-total.html",
-    "revision": "e1046d1234013effcd4bee1d9457a347"
+    "revision": "5611cdbd8a72dbfeaa664d37969b4397"
   },
   {
     "url": "images/icon/d3-sandbox144.png",
@@ -211,7 +211,7 @@ self.__precacheManifest = [
   },
   {
     "url": "index.html",
-    "revision": "8eef7b70643b3eec71f6ea4af8ac3163"
+    "revision": "796089714bb2c5ab043439310ac634d1"
   }
 ].concat(self.__precacheManifest || []);
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
