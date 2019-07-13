@@ -11,7 +11,7 @@
 <p align="center">
 Play with D3.js
 
-[https://revonia.github.io/d3-sandbox/](https://revonia.github.io/d3-sandbox/)
+<a href="https://revonia.github.io/d3-sandbox/" target="_blank">https://revonia.github.io/d3-sandbox/</a>
 
 </p>
 <p align="center">
