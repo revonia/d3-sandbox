@@ -9,11 +9,9 @@
 </p>
 
 <p align="center">
-Play with D3.js
-
-<a href="https://revonia.github.io/d3-sandbox/" target="_blank">https://revonia.github.io/d3-sandbox/</a>
-
+Play with D3.js <a href="https://revonia.github.io/d3-sandbox/" target="_blank">https://revonia.github.io/d3-sandbox/</a>
 </p>
+
 <p align="center">
   D3 Sandbox 是一份围绕着 D3.js 编写的文档，包含 “D3.js 基础”、“实例”等内容，
   内置的沙盒编辑器让你在阅读的过程中可以立刻试验新想法。
