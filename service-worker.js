@@ -27,7 +27,7 @@ self.addEventListener('message', (event) => {
 self.__precacheManifest = [
   {
     "url": "404.html",
-    "revision": "3c7679f287b764aad4ccfa2e0ed32deb"
+    "revision": "21bc31287095c67cf0bf93a3826740d1"
   },
   {
     "url": "assets/css/0.styles.703e35be.css",
@@ -90,20 +90,20 @@ self.__precacheManifest = [
     "revision": "06c5bffdd8447f8dfefe9d231d1cd21c"
   },
   {
-    "url": "assets/js/21.541e044c.js",
-    "revision": "9c07348c11e4d3048a54b213112d87e3"
+    "url": "assets/js/21.b9101eb5.js",
+    "revision": "465c94e744d724e27555c85781da650b"
   },
   {
-    "url": "assets/js/22.b5681551.js",
-    "revision": "054a05675b320869ac515c7cb1993d81"
+    "url": "assets/js/22.5dc59c83.js",
+    "revision": "981fade8ed6234aff206c857a425dc84"
   },
   {
-    "url": "assets/js/23.00b1bdcb.js",
-    "revision": "0167db22b36366e7fb06d8fc76b934cb"
+    "url": "assets/js/23.e8fdc5d4.js",
+    "revision": "94445dc0380928207d6176f6d950e98d"
   },
   {
-    "url": "assets/js/24.f688d619.js",
-    "revision": "bd893876231ba7005c256a83a721fd4b"
+    "url": "assets/js/24.2611d344.js",
+    "revision": "1c278f0b569c9535efa7190c3b776547"
   },
   {
     "url": "assets/js/25.236578aa.js",
@@ -150,8 +150,8 @@ self.__precacheManifest = [
     "revision": "00a858dc9d4171661f05d2453e165614"
   },
   {
-    "url": "assets/js/app.3235b651.js",
-    "revision": "e8a71b5cc0d146b9c3dd70f88d095ce0"
+    "url": "assets/js/app.1222e876.js",
+    "revision": "7b7b070f6c439bd75a0d23461e9c2786"
   },
   {
     "url": "assets/js/vendors~docsearch.4762853e.js",
@@ -159,31 +159,31 @@ self.__precacheManifest = [
   },
   {
     "url": "d3-basic/digging-deeper-collection-dataset.html",
-    "revision": "343cd35aea55d2b37ba3e0d5e640ec9e"
+    "revision": "45031be523900aae8d813f1d5bbc6eff"
   },
   {
     "url": "d3-basic/index.html",
-    "revision": "eba61cb606e8ce6f8ad5081e8fb76c4b"
+    "revision": "3f4074ab9e614781695ac711d79063ca"
   },
   {
     "url": "d3-basic/joining-data.html",
-    "revision": "913ce7643f404353be16138781770a43"
+    "revision": "2e510cb23b3b9022f0b226040201e7d3"
   },
   {
     "url": "d3-basic/selecting-and-modifying.html",
-    "revision": "7eaf7beec76ed9ead0fa215bca4e85e0"
+    "revision": "bd302e961303f84d891dc0d64f8c121c"
   },
   {
     "url": "examples/index.html",
-    "revision": "e810172871c6cceefd9afc42cf3cac6d"
+    "revision": "1f987e7b1f6457f81a3eb97edd4fe176"
   },
   {
     "url": "examples/line-charts.html",
-    "revision": "019aff85bd039d56d0e227801cee18ac"
+    "revision": "9374184b719b9e7ff53648b1d9e0e74b"
   },
   {
     "url": "examples/world-map-labor-force-total.html",
-    "revision": "474eba41928093c086ef14e17f69ffb8"
+    "revision": "60914f50188974245c3d0796e9969724"
   },
   {
     "url": "images/icon/d3-sandbox144.png",
@@ -211,7 +211,7 @@ self.__precacheManifest = [
   },
   {
     "url": "index.html",
-    "revision": "341f5ed96631495adf1a67a570130ad9"
+    "revision": "113c40abc260cf796f5e3e23c9e2a584"
   }
 ].concat(self.__precacheManifest || []);
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
