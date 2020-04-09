@@ -27,10 +27,10 @@ self.addEventListener('message', (event) => {
 self.__precacheManifest = [
   {
     "url": "404.html",
-    "revision": "21bc31287095c67cf0bf93a3826740d1"
+    "revision": "bcd5e1f4fc3bae94573ca7405a2591c6"
   },
   {
-    "url": "assets/css/0.styles.703e35be.css",
+    "url": "assets/css/0.styles.239e2ee2.css",
     "revision": "79cf12fa7a3b1e380775077964353bbf"
   },
   {
@@ -46,8 +46,8 @@ self.__precacheManifest = [
     "revision": "f682081cd827b3832900ec736b0207e0"
   },
   {
-    "url": "assets/js/11.57c528ec.js",
-    "revision": "051544bddbd47621a04db4d80cc769c4"
+    "url": "assets/js/11.f4a9c22e.js",
+    "revision": "cac2a9ffe6ccd3e7bb2a6078021b6fa9"
   },
   {
     "url": "assets/js/12.0a02e2bb.js",
@@ -58,8 +58,8 @@ self.__precacheManifest = [
     "revision": "691d97437e9875773f442e6cf5dbfc18"
   },
   {
-    "url": "assets/js/14.4d452f30.js",
-    "revision": "e7ed86102e5c181332e8541f9bdbedfd"
+    "url": "assets/js/14.dbb1ec4b.js",
+    "revision": "dcabbb48a4ba89b95d232ac28eef3bad"
   },
   {
     "url": "assets/js/15.3dba9412.js",
@@ -70,40 +70,40 @@ self.__precacheManifest = [
     "revision": "98d30ef129b9a278c410ca39379aca66"
   },
   {
-    "url": "assets/js/17.0cf59fcc.js",
-    "revision": "2f0d816685e098344de53aaba4ed5c96"
+    "url": "assets/js/17.c3d22253.js",
+    "revision": "e49c1cec17dbcb03a69ddcf603781728"
   },
   {
-    "url": "assets/js/18.43714569.js",
-    "revision": "725365c850f300b6d685657d04419f25"
+    "url": "assets/js/18.4e6f5e49.js",
+    "revision": "8c46dbf3d46409c46c5e069c683d624c"
   },
   {
-    "url": "assets/js/19.5a6b5faa.js",
-    "revision": "4f73d10a18c49a523935fdacf8f9e3c1"
+    "url": "assets/js/19.1a4aa14c.js",
+    "revision": "1cc98fe0c38da1a53580ed2bf4cefbed"
   },
   {
     "url": "assets/js/2.5496e02a.js",
     "revision": "028fde3a7dad28e128b790e45186f6a0"
   },
   {
-    "url": "assets/js/20.95d54482.js",
-    "revision": "06c5bffdd8447f8dfefe9d231d1cd21c"
+    "url": "assets/js/20.62a68585.js",
+    "revision": "883d84f26aa4eaea6958dd5a9516b0e6"
   },
   {
-    "url": "assets/js/21.b9101eb5.js",
-    "revision": "465c94e744d724e27555c85781da650b"
+    "url": "assets/js/21.541e044c.js",
+    "revision": "9c07348c11e4d3048a54b213112d87e3"
   },
   {
-    "url": "assets/js/22.5dc59c83.js",
-    "revision": "981fade8ed6234aff206c857a425dc84"
+    "url": "assets/js/22.308dc5a8.js",
+    "revision": "050bfc69325a53bf9896f728cc9b4138"
   },
   {
-    "url": "assets/js/23.e8fdc5d4.js",
-    "revision": "94445dc0380928207d6176f6d950e98d"
+    "url": "assets/js/23.9013758a.js",
+    "revision": "a177038ce4b611e2fe4229955951bfb8"
   },
   {
-    "url": "assets/js/24.2611d344.js",
-    "revision": "1c278f0b569c9535efa7190c3b776547"
+    "url": "assets/js/24.b31a872a.js",
+    "revision": "52f829272aa1d1e987cc1b4e71d0c8ed"
   },
   {
     "url": "assets/js/25.236578aa.js",
@@ -115,7 +115,7 @@ self.__precacheManifest = [
   },
   {
     "url": "assets/js/27.93d21bf6.js",
-    "revision": "f3f4732e3e7636b811428232b459044a"
+    "revision": "a2bba20d31e9e97e590e67e350aa02cb"
   },
   {
     "url": "assets/js/28.1e9a3462.js",
@@ -127,7 +127,7 @@ self.__precacheManifest = [
   },
   {
     "url": "assets/js/3.707fccca.js",
-    "revision": "47b1b5dd9a7580718eaa57d90c0a9479"
+    "revision": "ddfe40d0d385b377c78c06e34a8b490d"
   },
   {
     "url": "assets/js/30.46f70516.js",
@@ -143,15 +143,15 @@ self.__precacheManifest = [
   },
   {
     "url": "assets/js/8.2de15f84.js",
-    "revision": "3de96120af33ad68ff5f8aafca859a3d"
+    "revision": "2af6e8a60edc487029f265530595aebd"
   },
   {
     "url": "assets/js/9.8a64b501.js",
     "revision": "00a858dc9d4171661f05d2453e165614"
   },
   {
-    "url": "assets/js/app.1222e876.js",
-    "revision": "7b7b070f6c439bd75a0d23461e9c2786"
+    "url": "assets/js/app.8a3d28af.js",
+    "revision": "115c6d03f3175b980e6ceff9896455c1"
   },
   {
     "url": "assets/js/vendors~docsearch.4762853e.js",
@@ -159,31 +159,31 @@ self.__precacheManifest = [
   },
   {
     "url": "d3-basic/digging-deeper-collection-dataset.html",
-    "revision": "45031be523900aae8d813f1d5bbc6eff"
+    "revision": "fc8293fe3d69f07d123f9804033517d2"
   },
   {
     "url": "d3-basic/index.html",
-    "revision": "3f4074ab9e614781695ac711d79063ca"
+    "revision": "0dc59828a4e8a8eb7d83c8ae21cf4c3d"
   },
   {
     "url": "d3-basic/joining-data.html",
-    "revision": "2e510cb23b3b9022f0b226040201e7d3"
+    "revision": "6c0ce12ebc515eb3bb72df28c8320c57"
   },
   {
     "url": "d3-basic/selecting-and-modifying.html",
-    "revision": "bd302e961303f84d891dc0d64f8c121c"
+    "revision": "0ea7b0b7f9f09f46bf47e07523117283"
   },
   {
     "url": "examples/index.html",
-    "revision": "1f987e7b1f6457f81a3eb97edd4fe176"
+    "revision": "2bacc71476e2d61829fe2306d9028383"
   },
   {
     "url": "examples/line-charts.html",
-    "revision": "9374184b719b9e7ff53648b1d9e0e74b"
+    "revision": "332b48ac9681860c3aa4f023acb20778"
   },
   {
     "url": "examples/world-map-labor-force-total.html",
-    "revision": "60914f50188974245c3d0796e9969724"
+    "revision": "6c477040884bd59eb7eb44d52cdfde41"
   },
   {
     "url": "images/icon/d3-sandbox144.png",
@@ -211,7 +211,7 @@ self.__precacheManifest = [
   },
   {
     "url": "index.html",
-    "revision": "113c40abc260cf796f5e3e23c9e2a584"
+    "revision": "556ca806efde094dcd4e9f1f3efe86b5"
   }
 ].concat(self.__precacheManifest || []);
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
